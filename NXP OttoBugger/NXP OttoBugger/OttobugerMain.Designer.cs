@@ -30,14 +30,14 @@
         {
             SwUpdate_ProgressBar = new ProgressBar();
             UartRadio = new RadioButton();
-            groupBox1 = new GroupBox();
+            COMM_MODE_GB = new GroupBox();
             CanRadio = new RadioButton();
-            groupBox2 = new GroupBox();
+            BAUD_GB = new GroupBox();
             BaudCombobox = new ComboBox();
             ConnectButton = new Button();
             CFG_GB = new GroupBox();
             OpenTest_Window_Button = new Button();
-            groupBox8 = new GroupBox();
+            UART_COM_GB = new GroupBox();
             UartComportCombobox = new ComboBox();
             select_file_button = new Button();
             filename_label = new Label();
@@ -84,10 +84,10 @@
             label3 = new Label();
             CanDatasTXID = new TextBox();
             label2 = new Label();
-            groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
+            COMM_MODE_GB.SuspendLayout();
+            BAUD_GB.SuspendLayout();
             CFG_GB.SuspendLayout();
-            groupBox8.SuspendLayout();
+            UART_COM_GB.SuspendLayout();
             SW_UPD_GB.SuspendLayout();
             TEST_GB.SuspendLayout();
             UART_TEST_GB.SuspendLayout();
@@ -111,17 +111,18 @@
             UartRadio.TabStop = true;
             UartRadio.Text = "Uart";
             UartRadio.UseVisualStyleBackColor = true;
+            UartRadio.CheckedChanged += UartRadio_CheckedChanged;
             // 
-            // groupBox1
+            // COMM_MODE_GB
             // 
-            groupBox1.Controls.Add(CanRadio);
-            groupBox1.Controls.Add(UartRadio);
-            groupBox1.Location = new Point(6, 17);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(111, 58);
-            groupBox1.TabIndex = 4;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Comm Mode";
+            COMM_MODE_GB.Controls.Add(CanRadio);
+            COMM_MODE_GB.Controls.Add(UartRadio);
+            COMM_MODE_GB.Location = new Point(6, 17);
+            COMM_MODE_GB.Name = "COMM_MODE_GB";
+            COMM_MODE_GB.Size = new Size(111, 58);
+            COMM_MODE_GB.TabIndex = 4;
+            COMM_MODE_GB.TabStop = false;
+            COMM_MODE_GB.Text = "Comm Mode";
             // 
             // CanRadio
             // 
@@ -134,15 +135,15 @@
             CanRadio.Text = "Can";
             CanRadio.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // BAUD_GB
             // 
-            groupBox2.Controls.Add(BaudCombobox);
-            groupBox2.Location = new Point(6, 81);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(105, 65);
-            groupBox2.TabIndex = 5;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Baud";
+            BAUD_GB.Controls.Add(BaudCombobox);
+            BAUD_GB.Location = new Point(6, 81);
+            BAUD_GB.Name = "BAUD_GB";
+            BAUD_GB.Size = new Size(105, 65);
+            BAUD_GB.TabIndex = 5;
+            BAUD_GB.TabStop = false;
+            BAUD_GB.Text = "Baud";
             // 
             // BaudCombobox
             // 
@@ -161,14 +162,15 @@
             ConnectButton.TabIndex = 6;
             ConnectButton.Text = "Connect to Device";
             ConnectButton.UseVisualStyleBackColor = true;
+            ConnectButton.Click += ConnectButton_Click;
             // 
             // CFG_GB
             // 
             CFG_GB.Controls.Add(OpenTest_Window_Button);
-            CFG_GB.Controls.Add(groupBox8);
+            CFG_GB.Controls.Add(UART_COM_GB);
             CFG_GB.Controls.Add(ConnectButton);
-            CFG_GB.Controls.Add(groupBox2);
-            CFG_GB.Controls.Add(groupBox1);
+            CFG_GB.Controls.Add(BAUD_GB);
+            CFG_GB.Controls.Add(COMM_MODE_GB);
             CFG_GB.Location = new Point(12, 12);
             CFG_GB.Name = "CFG_GB";
             CFG_GB.Size = new Size(244, 181);
@@ -186,15 +188,15 @@
             OpenTest_Window_Button.UseVisualStyleBackColor = true;
             OpenTest_Window_Button.Click += OpenTest_Window_Button_Click;
             // 
-            // groupBox8
+            // UART_COM_GB
             // 
-            groupBox8.Controls.Add(UartComportCombobox);
-            groupBox8.Location = new Point(117, 81);
-            groupBox8.Name = "groupBox8";
-            groupBox8.Size = new Size(120, 65);
-            groupBox8.TabIndex = 6;
-            groupBox8.TabStop = false;
-            groupBox8.Text = "Uart Com Port";
+            UART_COM_GB.Controls.Add(UartComportCombobox);
+            UART_COM_GB.Location = new Point(117, 81);
+            UART_COM_GB.Name = "UART_COM_GB";
+            UART_COM_GB.Size = new Size(120, 65);
+            UART_COM_GB.TabIndex = 6;
+            UART_COM_GB.TabStop = false;
+            UART_COM_GB.Text = "Uart Com Port";
             // 
             // UartComportCombobox
             // 
@@ -260,16 +262,16 @@
             TEST_GB.Controls.Add(SendData);
             TEST_GB.Controls.Add(UART_TEST_GB);
             TEST_GB.Controls.Add(CAN_TEST_GB);
-            TEST_GB.Location = new Point(262, 12);
+            TEST_GB.Location = new Point(270, 7);
             TEST_GB.Name = "TEST_GB";
-            TEST_GB.Size = new Size(377, 330);
+            TEST_GB.Size = new Size(377, 335);
             TEST_GB.TabIndex = 11;
             TEST_GB.TabStop = false;
             TEST_GB.Text = "Test Messages";
             // 
             // SendData
             // 
-            SendData.Location = new Point(6, 296);
+            SendData.Location = new Point(6, 301);
             SendData.Name = "SendData";
             SendData.Size = new Size(363, 23);
             SendData.TabIndex = 9;
@@ -657,18 +659,22 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(648, 349);
+            ClientSize = new Size(655, 351);
             Controls.Add(TEST_GB);
             Controls.Add(SW_UPD_GB);
             Controls.Add(CFG_GB);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "OttobuggerV3";
             Text = "OttoBugger";
+            FormClosing += OttobuggerV3_FormClosing;
             Load += OttobuggerV3_Load;
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
-            groupBox2.ResumeLayout(false);
+            MouseDoubleClick += OttobuggerV3_MouseDoubleClick;
+            COMM_MODE_GB.ResumeLayout(false);
+            COMM_MODE_GB.PerformLayout();
+            BAUD_GB.ResumeLayout(false);
             CFG_GB.ResumeLayout(false);
-            groupBox8.ResumeLayout(false);
+            UART_COM_GB.ResumeLayout(false);
             SW_UPD_GB.ResumeLayout(false);
             SW_UPD_GB.PerformLayout();
             TEST_GB.ResumeLayout(false);
@@ -680,64 +686,63 @@
         }
 
         #endregion
-
-        public static ProgressBar SwUpdate_ProgressBar;
         public static Button select_cfg_file_button;
         public static Label cfgfilename_label;
-        public static RadioButton UartRadio;
-        public static GroupBox groupBox1;
-        public static RadioButton CanRadio;
-        public static GroupBox groupBox2;
-        public static ComboBox BaudCombobox;
-        public static Button ConnectButton;
-        public static GroupBox CFG_GB;
-        public static Button select_file_button;
-        public static Label filename_label;
-        public static Button Sw_UpdateStartButton;
-        public static GroupBox SW_UPD_GB;
-        public static Label Sw_DuringTimeLabel;
-        public static GroupBox TEST_GB;
-        public static GroupBox UART_TEST_GB;
-        public static GroupBox CAN_TEST_GB;
-        public static Label label4;
-        public static TextBox CanDatasRXID;
-        public static Label label3;
-        public static TextBox CanDatasTXID;
-        public static Label label2;
-        public static Label label7;
-        public static TextBox CanDatasRXD8;
-        public static TextBox CanDatasTXD8;
-        public static TextBox CanDatasRXD7;
-        public static TextBox CanDatasTXD7;
-        public static TextBox CanDatasRXD6;
-        public static TextBox CanDatasTXD6;
-        public static TextBox CanDatasRXD5;
-        public static TextBox CanDatasTXD5;
-        public static TextBox CanDatasRXD4;
-        public static TextBox CanDatasTXD4;
-        public static Label label6;
-        public static Label label5;
-        public static TextBox CanDatasRXD3;
-        public static TextBox CanDatasTXD3;
-        public static TextBox CanDatasRXD2;
-        public static TextBox CanDatasTXD2;
-        public static TextBox CanDatasRXD1;
-        public static TextBox CanDatasTXD1;
-        public static TextBox CanDatasRXDLC;
-        public static TextBox CanDatasTXDLC;
-        public static Label label10;
-        public static Label label9;
-        public static Label label8;
-        public static GroupBox groupBox8;
-        public static ComboBox UartComportCombobox;
-        public static Label label13;
-        public static Label label12;
-        public static Label label11;
-        public static Button SendData;
-        public static Label label15;
-        public static TextBox UartDatasRX;
-        public static Label label14;
-        public static TextBox UartDatasTX;
-        public static Button OpenTest_Window_Button;
+        public ProgressBar SwUpdate_ProgressBar;
+        public RadioButton UartRadio;
+        public GroupBox COMM_MODE_GB;
+        public RadioButton CanRadio;
+        public GroupBox BAUD_GB;
+        public ComboBox BaudCombobox;
+        public Button ConnectButton;
+        public GroupBox CFG_GB;
+        public Button select_file_button;
+        public Label filename_label;
+        public Button Sw_UpdateStartButton;
+        public GroupBox SW_UPD_GB;
+        public Label Sw_DuringTimeLabel;
+        public GroupBox TEST_GB;
+        public GroupBox UART_TEST_GB;
+        public GroupBox CAN_TEST_GB;
+        public Label label4;
+        public TextBox CanDatasRXID;
+        public Label label3;
+        public TextBox CanDatasTXID;
+        public Label label2;
+        public Label label7;
+        public TextBox CanDatasRXD8;
+        public TextBox CanDatasTXD8;
+        public TextBox CanDatasRXD7;
+        public TextBox CanDatasTXD7;
+        public TextBox CanDatasRXD6;
+        public TextBox CanDatasTXD6;
+        public TextBox CanDatasRXD5;
+        public TextBox CanDatasTXD5;
+        public TextBox CanDatasRXD4;
+        public TextBox CanDatasTXD4;
+        public Label label6;
+        public Label label5;
+        public TextBox CanDatasRXD3;
+        public TextBox CanDatasTXD3;
+        public TextBox CanDatasRXD2;
+        public TextBox CanDatasTXD2;
+        public TextBox CanDatasRXD1;
+        public TextBox CanDatasTXD1;
+        public TextBox CanDatasRXDLC;
+        public TextBox CanDatasTXDLC;
+        public Label label10;
+        public Label label9;
+        public Label label8;
+        public GroupBox UART_COM_GB;
+        public ComboBox UartComportCombobox;
+        public Label label13;
+        public Label label12;
+        public Label label11;
+        public Button SendData;
+        public Label label15;
+        public TextBox UartDatasRX;
+        public Label label14;
+        public TextBox UartDatasTX;
+        public Button OpenTest_Window_Button;
     }
 }

@@ -1,8 +1,27 @@
 {
   "version": 2,
-  "dgSpecHash": "Zt6dgjsKMV+peKzFunKDysh6/gN/uwfYTsfO7qVM2llHR6xwVX/4cAKu1KS4AWhUgDOXbqi3DBXkl0K4c07Kwg==",
+  "dgSpecHash": "7roJMr+1lVVTjO1bTbJz+nkSmQcab0O1mcfS/ZtKItPtAIWRTvsT/I7L2pnPSPiqx7aHeqYZK4NV6JBWw9EsvQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\NXP OttoBugger\\NXP OttoBugger\\NXP OttoBugger\\NXP OttoBugger.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.android-arm.runtime.native.system.io.ports\\9.0.3\\runtime.android-arm.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.android-arm64.runtime.native.system.io.ports\\9.0.3\\runtime.android-arm64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.android-x64.runtime.native.system.io.ports\\9.0.3\\runtime.android-x64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.android-x86.runtime.native.system.io.ports\\9.0.3\\runtime.android-x86.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.linux-arm.runtime.native.system.io.ports\\9.0.3\\runtime.linux-arm.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.linux-arm64.runtime.native.system.io.ports\\9.0.3\\runtime.linux-arm64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.linux-bionic-arm64.runtime.native.system.io.ports\\9.0.3\\runtime.linux-bionic-arm64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.linux-bionic-x64.runtime.native.system.io.ports\\9.0.3\\runtime.linux-bionic-x64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.linux-musl-arm.runtime.native.system.io.ports\\9.0.3\\runtime.linux-musl-arm.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.linux-musl-arm64.runtime.native.system.io.ports\\9.0.3\\runtime.linux-musl-arm64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.linux-musl-x64.runtime.native.system.io.ports\\9.0.3\\runtime.linux-musl-x64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.linux-x64.runtime.native.system.io.ports\\9.0.3\\runtime.linux-x64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.maccatalyst-arm64.runtime.native.system.io.ports\\9.0.3\\runtime.maccatalyst-arm64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.maccatalyst-x64.runtime.native.system.io.ports\\9.0.3\\runtime.maccatalyst-x64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.native.system.io.ports\\9.0.3\\runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.osx-arm64.runtime.native.system.io.ports\\9.0.3\\runtime.osx-arm64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\runtime.osx-x64.runtime.native.system.io.ports\\9.0.3\\runtime.osx-x64.runtime.native.system.io.ports.9.0.3.nupkg.sha512",
+    "C:\\Users\\acalg\\.nuget\\packages\\system.io.ports\\9.0.3\\system.io.ports.9.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
