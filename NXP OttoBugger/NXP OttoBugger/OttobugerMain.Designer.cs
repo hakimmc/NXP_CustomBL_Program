@@ -215,6 +215,7 @@
             select_file_button.TabIndex = 7;
             select_file_button.Text = "Select File";
             select_file_button.UseVisualStyleBackColor = true;
+            select_file_button.Click += select_file_button_Click;
             // 
             // filename_label
             // 
@@ -233,6 +234,7 @@
             Sw_UpdateStartButton.TabIndex = 9;
             Sw_UpdateStartButton.Text = "Software Update Start";
             Sw_UpdateStartButton.UseVisualStyleBackColor = true;
+            Sw_UpdateStartButton.Click += Sw_UpdateStartButton_Click;
             // 
             // SW_UPD_GB
             // 
@@ -277,6 +279,7 @@
             SendData.TabIndex = 9;
             SendData.Text = "Send Data";
             SendData.UseVisualStyleBackColor = true;
+            SendData.Click += SendData_Click;
             // 
             // UART_TEST_GB
             // 
@@ -438,6 +441,7 @@
             CanDatasRXD8.Size = new Size(23, 23);
             CanDatasRXD8.TabIndex = 24;
             CanDatasRXD8.Text = "18";
+            CanDatasRXD8.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasTXD8
             // 
@@ -447,6 +451,7 @@
             CanDatasTXD8.Size = new Size(23, 23);
             CanDatasTXD8.TabIndex = 23;
             CanDatasTXD8.Text = "18";
+            CanDatasTXD8.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasRXD7
             // 
@@ -456,6 +461,7 @@
             CanDatasRXD7.Size = new Size(23, 23);
             CanDatasRXD7.TabIndex = 22;
             CanDatasRXD7.Text = "17";
+            CanDatasRXD7.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasTXD7
             // 
@@ -465,6 +471,7 @@
             CanDatasTXD7.Size = new Size(23, 23);
             CanDatasTXD7.TabIndex = 21;
             CanDatasTXD7.Text = "17";
+            CanDatasTXD7.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasRXD6
             // 
@@ -474,6 +481,7 @@
             CanDatasRXD6.Size = new Size(23, 23);
             CanDatasRXD6.TabIndex = 20;
             CanDatasRXD6.Text = "16";
+            CanDatasRXD6.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasTXD6
             // 
@@ -483,6 +491,7 @@
             CanDatasTXD6.Size = new Size(23, 23);
             CanDatasTXD6.TabIndex = 19;
             CanDatasTXD6.Text = "16";
+            CanDatasTXD6.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasRXD5
             // 
@@ -492,6 +501,7 @@
             CanDatasRXD5.Size = new Size(23, 23);
             CanDatasRXD5.TabIndex = 18;
             CanDatasRXD5.Text = "15";
+            CanDatasRXD5.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasTXD5
             // 
@@ -501,6 +511,7 @@
             CanDatasTXD5.Size = new Size(23, 23);
             CanDatasTXD5.TabIndex = 17;
             CanDatasTXD5.Text = "15";
+            CanDatasTXD5.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasRXD4
             // 
@@ -510,6 +521,7 @@
             CanDatasRXD4.Size = new Size(23, 23);
             CanDatasRXD4.TabIndex = 16;
             CanDatasRXD4.Text = "14";
+            CanDatasRXD4.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasTXD4
             // 
@@ -519,6 +531,7 @@
             CanDatasTXD4.Size = new Size(23, 23);
             CanDatasTXD4.TabIndex = 15;
             CanDatasTXD4.Text = "14";
+            CanDatasTXD4.TextChanged += CanDatas_TextChanged;
             // 
             // label6
             // 
@@ -546,6 +559,7 @@
             CanDatasRXD3.Size = new Size(23, 23);
             CanDatasRXD3.TabIndex = 12;
             CanDatasRXD3.Text = "13";
+            CanDatasRXD3.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasTXD3
             // 
@@ -555,6 +569,7 @@
             CanDatasTXD3.Size = new Size(23, 23);
             CanDatasTXD3.TabIndex = 11;
             CanDatasTXD3.Text = "13";
+            CanDatasTXD3.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasRXD2
             // 
@@ -564,6 +579,7 @@
             CanDatasRXD2.Size = new Size(23, 23);
             CanDatasRXD2.TabIndex = 10;
             CanDatasRXD2.Text = "12";
+            CanDatasRXD2.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasTXD2
             // 
@@ -573,6 +589,7 @@
             CanDatasTXD2.Size = new Size(23, 23);
             CanDatasTXD2.TabIndex = 9;
             CanDatasTXD2.Text = "12";
+            CanDatasTXD2.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasRXD1
             // 
@@ -582,6 +599,7 @@
             CanDatasRXD1.Size = new Size(23, 23);
             CanDatasRXD1.TabIndex = 8;
             CanDatasRXD1.Text = "11";
+            CanDatasRXD1.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasTXD1
             // 
@@ -591,6 +609,7 @@
             CanDatasTXD1.Size = new Size(23, 23);
             CanDatasTXD1.TabIndex = 7;
             CanDatasTXD1.Text = "11";
+            CanDatasTXD1.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasRXDLC
             // 
@@ -600,6 +619,7 @@
             CanDatasRXDLC.Size = new Size(15, 23);
             CanDatasRXDLC.TabIndex = 6;
             CanDatasRXDLC.Text = "8";
+            CanDatasRXDLC.TextChanged += CanDatas_TextChanged;
             // 
             // CanDatasTXDLC
             // 
@@ -609,6 +629,7 @@
             CanDatasTXDLC.Size = new Size(15, 23);
             CanDatasTXDLC.TabIndex = 5;
             CanDatasTXDLC.Text = "8";
+            CanDatasTXDLC.TextChanged += CanDatas_TextChanged;
             // 
             // label4
             // 
@@ -627,6 +648,7 @@
             CanDatasRXID.Size = new Size(60, 23);
             CanDatasRXID.TabIndex = 3;
             CanDatasRXID.Text = "20000000";
+            CanDatasRXID.TextChanged += CanDatas_TextChanged;
             // 
             // label3
             // 
@@ -645,6 +667,7 @@
             CanDatasTXID.Size = new Size(60, 23);
             CanDatasTXID.TabIndex = 1;
             CanDatasTXID.Text = "20000000";
+            CanDatasTXID.TextChanged += CanDatas_TextChanged;
             // 
             // label2
             // 
