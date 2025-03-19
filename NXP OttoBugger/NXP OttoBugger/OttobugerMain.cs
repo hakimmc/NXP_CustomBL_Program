@@ -1,6 +1,9 @@
+using Peak.Can.Basic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text;
 
 namespace NXP_OttoBugger
 {
@@ -12,9 +15,14 @@ namespace NXP_OttoBugger
             InitializeComponent();
         }
 
-        public static string DefaultFileLocation;
+        string DefaultFileLocation;
         public bool flag = false;
         public int DoubleClickCounter = 0;
+
+        void StartUpgradeSW()
+        {
+            UartClass.UartBootloaderStart(UartClass.SerialCom, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel);
+        }
         void ReWriteDatas(string[] data)
         {
 
@@ -79,6 +87,9 @@ namespace NXP_OttoBugger
         string file = "set.csv";
         private void OttobuggerV3_Load(object sender, EventArgs e)
         {
+            Control.CheckForIllegalCrossThreadCalls = false;
+            Sw_UpdateStartButton.Enabled = false;
+            SwUpdate_ProgressBar.Enabled = false;
             UartClass.SerialCom = new SerialPort();
             UartComportCombobox.Items.AddRange(SerialPort.GetPortNames());
             this.Size = new Size(286, 390);
@@ -100,11 +111,19 @@ namespace NXP_OttoBugger
                     string data = reader.ReadToEnd();
                     ReWriteDatas(data.Split(','));
                 }
+<<<<<<< HEAD
+            }
+            catch (Exception EX)
+            {
+                MessageBox.Show(EX.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+=======
+>>>>>>> cc62eaa3cd2a51ae68ab35a3cc914791fb8e5006
             }
             catch (Exception EX)
             {
                 MessageBox.Show(EX.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            CanbusClass.CanTXMessage = new PcanMessage();
         }
         private void OpenTest_Window_Button_Click(object sender, EventArgs e)
         {
@@ -184,15 +203,18 @@ namespace NXP_OttoBugger
                 //can
                 else
                 {
-                    ConnectButton.Text = "Disconnect from Device";
-                    COMM_MODE_GB.Enabled = false;
-                    BAUD_GB.Enabled = false;
-                    UART_COM_GB.Enabled = false;
-                    SW_UPD_GB.Enabled = true;
-                    SW_UPD_GB.Enabled = true;
-                    TEST_GB.Enabled = true;
-                    UART_TEST_GB.Enabled = false;
-                    CAN_TEST_GB.Enabled = true;
+                    if (CanbusClass.CanConnect(BaudCombobox.Text))
+                    {
+                        ConnectButton.Text = "Disconnect from Device";
+                        COMM_MODE_GB.Enabled = false;
+                        BAUD_GB.Enabled = false;
+                        UART_COM_GB.Enabled = false;
+                        SW_UPD_GB.Enabled = true;
+                        SW_UPD_GB.Enabled = true;
+                        TEST_GB.Enabled = true;
+                        UART_TEST_GB.Enabled = false;
+                        CAN_TEST_GB.Enabled = true;
+                    }
                 }
             }
             else
@@ -215,14 +237,17 @@ namespace NXP_OttoBugger
                 //can disc
                 else
                 {
-                    ConnectButton.Text = "Connect to Device";
-                    COMM_MODE_GB.Enabled = true;
-                    BAUD_GB.Enabled = true;
-                    UART_COM_GB.Enabled = false;
-                    SW_UPD_GB.Enabled = false;
-                    TEST_GB.Enabled = false;
-                    UART_TEST_GB.Enabled = false;
-                    CAN_TEST_GB.Enabled = false;
+                    if (CanbusClass.CanDisconnect())
+                    {
+                        ConnectButton.Text = "Connect to Device";
+                        COMM_MODE_GB.Enabled = true;
+                        BAUD_GB.Enabled = true;
+                        UART_COM_GB.Enabled = false;
+                        SW_UPD_GB.Enabled = false;
+                        TEST_GB.Enabled = false;
+                        UART_TEST_GB.Enabled = false;
+                        CAN_TEST_GB.Enabled = false;
+                    }
                 }
             }
 
@@ -239,6 +264,114 @@ namespace NXP_OttoBugger
                 };
                 Process.Start(psi);
                 DoubleClickCounter = 0;
+            }
+        }
+        private void select_file_button_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Application File |*.bin| Config File|*.cfg";
+            ofd.FilterIndex = 1;
+            ofd.InitialDirectory = DefaultFileLocation;
+            if (DialogResult.OK == ofd.ShowDialog())
+            {
+                DefaultFileLocation = ofd.FileName;
+                filename_label.Text = "Filename : " + ofd.SafeFileName;
+                Sw_UpdateStartButton.Enabled = true;
+                SwUpdate_ProgressBar.Maximum = Convert.ToInt32((new FileInfo(ofd.FileName).Length));
+            }
+
+        }
+        private void Sw_UpdateStartButton_Click(object sender, EventArgs e)
+        {
+            Thread SW_UPD_TH = new Thread(StartUpgradeSW);
+            SW_UPD_TH.Start();
+            //await Task.Run(() => UartClass.LoadAnimation(SwUpdate_ProgressBar));
+            //MessageBox.Show(success ? "Y�kleme tamamland�!" : "Y�kleme ba�ar�s�z!");
+        }
+        private void CanDatas_TextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox.Text == string.Empty)
+            {
+                textBox.Text = "0";
+            }
+            if (textBox != null)
+            {
+                string text = textBox.Text.ToUpper();
+                string filteredText = new string(text.Where(c => "0123456789ABCDEF".Contains(c)).ToArray());
+                if (text != filteredText)
+                {
+                    textBox.Text = filteredText;
+                    textBox.SelectionStart = textBox.Text.Length;
+                }
+            }
+            if (textBox == CanDatasTXDLC)
+            {
+
+                if (int.Parse(CanDatasTXDLC.Text, System.Globalization.NumberStyles.HexNumber) > 8)
+                {
+                    CanDatasTXDLC.Text = "8";
+                }
+                else if (int.Parse(CanDatasTXDLC.Text, System.Globalization.NumberStyles.HexNumber) < 1)
+                {
+                    CanDatasTXDLC.Text = "1";
+                }
+            }
+            if (textBox == CanDatasRXDLC)
+            {
+                if (int.Parse(CanDatasRXDLC.Text, System.Globalization.NumberStyles.HexNumber) > 8)
+                {
+                    CanDatasRXDLC.Text = "8";
+                }
+                else if (int.Parse(CanDatasRXDLC.Text, System.Globalization.NumberStyles.HexNumber) < 1)
+                {
+                    CanDatasRXDLC.Text = "1";
+                }
+            }
+
+            if (textBox == CanDatasTXID)
+            {
+                if (int.Parse(CanDatasTXID.Text, System.Globalization.NumberStyles.HexNumber) > 0x20000000)
+                {
+                    CanDatasTXID.Text = "20000000";
+                }
+                else if (int.Parse(CanDatasTXID.Text, System.Globalization.NumberStyles.HexNumber) < 1)
+                {
+                    CanDatasTXID.Text = "1";
+                }
+            }
+            if (textBox == CanDatasRXID)
+            {
+                if (int.Parse(CanDatasRXID.Text, System.Globalization.NumberStyles.HexNumber) > 0x20000000)
+                {
+                    CanDatasRXID.Text = "20000000";
+                }
+                else if (int.Parse(CanDatasRXID.Text, System.Globalization.NumberStyles.HexNumber) < 1)
+                {
+                    CanDatasRXID.Text = "1";
+                }
+            }
+        }
+
+        private void SendData_Click(object sender, EventArgs e)
+        {
+            if (UartRadio.Checked)
+            {
+                UartClass.Serial_Transmit(UartClass.SerialCom, UartDatasTX.Text);
+            }
+            else
+            {
+                uint ID = uint.Parse(CanDatasTXID.Text, System.Globalization.NumberStyles.HexNumber);
+                byte[] Data = new byte[8];
+                Data[0] = byte.Parse(CanDatasTXD1.Text, System.Globalization.NumberStyles.HexNumber);
+                Data[1] = byte.Parse(CanDatasTXD2.Text, System.Globalization.NumberStyles.HexNumber);
+                Data[2] = byte.Parse(CanDatasTXD3.Text, System.Globalization.NumberStyles.HexNumber);
+                Data[3] = byte.Parse(CanDatasTXD4.Text, System.Globalization.NumberStyles.HexNumber);
+                Data[4] = byte.Parse(CanDatasTXD5.Text, System.Globalization.NumberStyles.HexNumber);
+                Data[5] = byte.Parse(CanDatasTXD6.Text, System.Globalization.NumberStyles.HexNumber);
+                Data[6] = byte.Parse(CanDatasTXD7.Text, System.Globalization.NumberStyles.HexNumber);
+                Data[7] = byte.Parse(CanDatasTXD8.Text, System.Globalization.NumberStyles.HexNumber);
+                CanbusClass.CanTransmit(ID, ID > 2047 ? MessageType.Extended : MessageType.Standard, Convert.ToUInt32(CanDatasTXDLC.Text), Data);
             }
         }
     }
