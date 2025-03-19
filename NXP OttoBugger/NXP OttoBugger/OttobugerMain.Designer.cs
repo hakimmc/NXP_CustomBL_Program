@@ -119,7 +119,7 @@
             COMM_MODE_GB.Controls.Add(UartRadio);
             COMM_MODE_GB.Location = new Point(6, 17);
             COMM_MODE_GB.Name = "COMM_MODE_GB";
-            COMM_MODE_GB.Size = new Size(111, 58);
+            COMM_MODE_GB.Size = new Size(105, 58);
             COMM_MODE_GB.TabIndex = 4;
             COMM_MODE_GB.TabStop = false;
             COMM_MODE_GB.Text = "Comm Mode";
@@ -127,7 +127,7 @@
             // CanRadio
             // 
             CanRadio.AutoSize = true;
-            CanRadio.Location = new Point(59, 22);
+            CanRadio.Location = new Point(53, 22);
             CanRadio.Name = "CanRadio";
             CanRadio.Size = new Size(46, 19);
             CanRadio.TabIndex = 4;
@@ -180,9 +180,9 @@
             // 
             // OpenTest_Window_Button
             // 
-            OpenTest_Window_Button.Location = new Point(123, 17);
+            OpenTest_Window_Button.Location = new Point(117, 22);
             OpenTest_Window_Button.Name = "OpenTest_Window_Button";
-            OpenTest_Window_Button.Size = new Size(114, 58);
+            OpenTest_Window_Button.Size = new Size(119, 53);
             OpenTest_Window_Button.TabIndex = 7;
             OpenTest_Window_Button.Text = "Open Test Window";
             OpenTest_Window_Button.UseVisualStyleBackColor = true;
@@ -202,10 +202,12 @@
             // 
             UartComportCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
             UartComportCombobox.FormattingEnabled = true;
+            UartComportCombobox.ItemHeight = 15;
             UartComportCombobox.Location = new Point(6, 22);
             UartComportCombobox.Name = "UartComportCombobox";
             UartComportCombobox.Size = new Size(104, 23);
             UartComportCombobox.TabIndex = 1;
+            UartComportCombobox.Click += UartComportCombobox_Click;
             // 
             // select_file_button
             // 

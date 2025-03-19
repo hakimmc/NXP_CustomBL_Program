@@ -1,9 +1,6 @@
 using Peak.Can.Basic;
 using System.Diagnostics;
-using System.IO;
 using System.IO.Ports;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Text;
 
 namespace NXP_OttoBugger
 {
@@ -21,7 +18,14 @@ namespace NXP_OttoBugger
 
         void StartUpgradeSW()
         {
-            UartClass.UartBootloaderStart(UartClass.SerialCom, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel);
+            if (UartRadio.Checked)
+            {
+                UartClass.UartBootloaderStart(UartClass.SerialCom, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel);
+            }
+            else if (CanRadio.Checked)
+            {
+                CanbusClass.CanBootloaderStart(CanbusClass.channel, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel);
+            }
         }
         void ReWriteDatas(string[] data)
         {
@@ -33,6 +37,8 @@ namespace NXP_OttoBugger
                 BaudCombobox.Items.Clear();
                 BaudCombobox.Items.AddRange(UartClass.baudrates);
                 UART_COM_GB.Enabled = true;
+                UartComportCombobox.Items.Clear();
+                UartComportCombobox.Items.AddRange(SerialPort.GetPortNames());
             }
             else
             {
@@ -40,7 +46,9 @@ namespace NXP_OttoBugger
                 CanRadio.Checked = true;
                 BaudCombobox.Items.Clear();
                 BaudCombobox.Items.AddRange(CanbusClass.baudrates);
-                UART_COM_GB.Enabled = false;
+                UART_COM_GB.Enabled = true;
+                UartComportCombobox.Items.Clear();
+                UartComportCombobox.Items.AddRange(Enum.GetNames(typeof(PcanChannel)));
             }
             foreach (string s in BaudCombobox.Items)
             {
@@ -97,7 +105,7 @@ namespace NXP_OttoBugger
             TEST_GB.Enabled = false;
             try
             {
-                if(!File.Exists(file))
+                if (!File.Exists(file))
                 {
                     FileStream fs = File.Create(file);
                     fs.Close();
@@ -135,6 +143,14 @@ namespace NXP_OttoBugger
         }
         private void OttobuggerV3_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if(UartClass.SerialCom.IsOpen)
+            {
+                UartClass.SerialCom.Close();
+            }
+            if (CanbusClass.IsCanOpen)
+            {
+                CanbusClass.CanDisconnect(CanbusClass.channel);
+            }
             using (StreamWriter writer = new StreamWriter(file))
             {
                 string commod = UartRadio.Checked == true ? "UART" : "CAN";
@@ -171,7 +187,24 @@ namespace NXP_OttoBugger
             BaudCombobox.Items.Clear();
             BaudCombobox.Items.AddRange(UartRadio.Checked == true ? UartClass.baudrates : CanbusClass.baudrates);
             BaudCombobox.Text = Convert.ToString(BaudCombobox.Items[0]);
-            UART_COM_GB.Enabled = UartRadio.Checked;
+            UartComportCombobox.Items.Clear();
+            UartComportCombobox.Items.AddRange(UartRadio.Checked == true ? SerialPort.GetPortNames() : Enum.GetNames(typeof(PcanChannel)));
+            if (UartRadio.Checked)
+            {
+                try
+                {
+                    UartComportCombobox.Text = (Convert.ToString(UartComportCombobox.Items[0]));
+                }
+                catch
+                {
+                    UartComportCombobox.Text = "ComPort Couldnt Find!";
+                }
+
+            }
+            else
+            {
+                UartComportCombobox.Text = "Usb01";
+            }
 
         }
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -196,8 +229,16 @@ namespace NXP_OttoBugger
                 //can
                 else
                 {
-                    if (CanbusClass.CanConnect(BaudCombobox.Text))
+                    string selectedText = UartComportCombobox.SelectedItem.ToString();
+                    if (Enum.TryParse(selectedText, out PcanChannel selectedChannel))
                     {
+                        CanbusClass.channel = selectedChannel;
+                        //ushort channelValue = (ushort)selectedChannel;
+                        //MessageBox.Show($"Selected Channel: {selectedChannel} ({channelValue})");
+                    }
+                    if (CanbusClass.CanConnect(CanbusClass.channel, BaudCombobox.Text))
+                    {
+                        CanbusClass.IsCanOpen = true;
                         ConnectButton.Text = "Disconnect from Device";
                         COMM_MODE_GB.Enabled = false;
                         BAUD_GB.Enabled = false;
@@ -230,8 +271,9 @@ namespace NXP_OttoBugger
                 //can disc
                 else
                 {
-                    if (CanbusClass.CanDisconnect())
+                    if (CanbusClass.CanDisconnect(CanbusClass.channel))
                     {
+                        CanbusClass.IsCanOpen = false;
                         ConnectButton.Text = "Connect to Device";
                         COMM_MODE_GB.Enabled = true;
                         BAUD_GB.Enabled = true;
@@ -345,7 +387,6 @@ namespace NXP_OttoBugger
                 }
             }
         }
-
         private void SendData_Click(object sender, EventArgs e)
         {
             if (UartRadio.Checked)
@@ -364,7 +405,25 @@ namespace NXP_OttoBugger
                 Data[5] = byte.Parse(CanDatasTXD6.Text, System.Globalization.NumberStyles.HexNumber);
                 Data[6] = byte.Parse(CanDatasTXD7.Text, System.Globalization.NumberStyles.HexNumber);
                 Data[7] = byte.Parse(CanDatasTXD8.Text, System.Globalization.NumberStyles.HexNumber);
-                CanbusClass.CanTransmit(ID, ID > 2047 ? MessageType.Extended : MessageType.Standard, Convert.ToUInt32(CanDatasTXDLC.Text), Data);
+                CanbusClass.CanTransmit(CanbusClass.channel, ID, ID > 2047 ? MessageType.Extended : MessageType.Standard, Convert.ToUInt32(CanDatasTXDLC.Text), Data);
+            }
+        }
+
+        private void UartComportCombobox_Click(object sender, EventArgs e)
+        {
+            if (UartRadio.Checked)
+            {
+                string comport = UartComportCombobox.Text;
+                UartComportCombobox.Items.Clear();
+                UartComportCombobox.Items.AddRange(SerialPort.GetPortNames());
+                foreach(string ports in UartComportCombobox.Items)
+                {
+                    if(comport == ports) 
+                    {
+                        UartComportCombobox.Text = comport;
+                        break;
+                    }
+                }
             }
         }
     }

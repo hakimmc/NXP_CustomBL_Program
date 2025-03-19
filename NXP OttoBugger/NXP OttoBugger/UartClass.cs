@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Ports;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
+﻿using System.IO.Ports;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NXP_OttoBugger
 {
     public static class UartClass
     {
         public static SerialPort SerialCom;
-        public static string[] baudrates = { "9600", "115200"};
+        public static string[] baudrates = { "9600", "115200" };
+        private static readonly byte[] START_MSG = Encoding.ASCII.GetBytes("!OTTOWAKE!");
+        private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!STR");
+        private static readonly byte[] NEXT_MSG = Encoding.ASCII.GetBytes("!NXT");
+        private static readonly byte[] END_MSG = Encoding.ASCII.GetBytes("!OTTOJUMP!");
+        private static readonly byte[] SKIP_MSG = Encoding.ASCII.GetBytes("!SKIPJUMP!");
         public static bool UartConnect(SerialPort serial, String Com, int BaudRate)
         {
             try
@@ -21,12 +21,12 @@ namespace NXP_OttoBugger
                 serial.Open();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-                
+
         }
         public static bool UartDisconnect(SerialPort serial)
         {
@@ -42,12 +42,6 @@ namespace NXP_OttoBugger
             }
 
         }
-
-        private static readonly byte[] START_MSG = Encoding.ASCII.GetBytes("!OTTOWAKE!");
-        private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!STR");
-        private static readonly byte[] NEXT_MSG = Encoding.ASCII.GetBytes("!NXT");
-        private static readonly byte[] END_MSG = Encoding.ASCII.GetBytes("!OTTOJUMP!");
-        private static readonly byte[] SKIP_MSG = Encoding.ASCII.GetBytes("!SKIPJUMP!");
         public static int SendedDataCount;
         public static bool UartBootloaderStart(SerialPort serial, string filePath, ProgressBar pb, Button SW_UPD_BUTTON, Label TIME_LABEL)
         {
@@ -94,7 +88,7 @@ namespace NXP_OttoBugger
                 SW_UPD_BUTTON.Enabled = true;
                 pb.Enabled = false;
                 pb.Value = 0;
-                MessageBox.Show("Software Update Successfull!","Software Update Info",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                MessageBox.Show("Software Update Successfull!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
             catch
@@ -172,13 +166,7 @@ namespace NXP_OttoBugger
             }
             return false;
         }
-        public static void LoadAnimation(ProgressBar pb)
-        {
-            while(pb.Value < pb.Maximum)
-            {
-                pb.Value = SendedDataCount;
-            }
-        }
+        
         public static bool Serial_Transmit(SerialPort serial, string Data)
         {
             try
