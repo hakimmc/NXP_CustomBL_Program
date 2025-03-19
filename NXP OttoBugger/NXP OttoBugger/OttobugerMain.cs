@@ -119,6 +119,13 @@ namespace NXP_OttoBugger
                     string data = reader.ReadToEnd();
                     ReWriteDatas(data.Split(','));
                 }
+<<<<<<< HEAD
+            }
+            catch (Exception EX)
+            {
+                MessageBox.Show(EX.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+=======
+>>>>>>> cc62eaa3cd2a51ae68ab35a3cc914791fb8e5006
             }
             catch (Exception EX)
             {
