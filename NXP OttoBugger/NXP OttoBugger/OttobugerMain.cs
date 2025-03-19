@@ -84,10 +84,26 @@ namespace NXP_OttoBugger
             this.Size = new Size(286, 390);
             SW_UPD_GB.Enabled = false;
             TEST_GB.Enabled = false;
-            using (StreamReader reader = new StreamReader(file))
+            try
             {
-                string data = reader.ReadToEnd();
-                ReWriteDatas(data.Split(','));
+                if(!File.Exists(file))
+                {
+                    FileStream fs = File.Create(file);
+                    fs.Close();
+                    using (StreamWriter writer = new StreamWriter(file))
+                    {
+                        writer.Write("CAN,125K,COM7,C:/,20000000,8,1,2,3,4,5,6,7,8,20000000,8,9,A,B,C,D,E,F,G,UARTTX,UARTRX");
+                    }
+                }
+                using (StreamReader reader = new StreamReader(file))
+                {
+                    string data = reader.ReadToEnd();
+                    ReWriteDatas(data.Split(','));
+                }
+            }
+            catch (Exception EX)
+            {
+                MessageBox.Show(EX.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void OpenTest_Window_Button_Click(object sender, EventArgs e)
