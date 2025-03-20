@@ -1,6 +1,7 @@
 using Peak.Can.Basic;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Security.Permissions;
 
 namespace NXP_OttoBugger
 {
@@ -15,16 +16,17 @@ namespace NXP_OttoBugger
         string DefaultFileLocation;
         public bool flag = false;
         public int DoubleClickCounter = 0;
-
+        Thread SW_UPD_TH;
+        bool KILL_SW_UPD_TH = false;
         void StartUpgradeSW()
         {
             if (UartRadio.Checked)
             {
-                UartClass.UartBootloaderStart(UartClass.SerialCom, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel);
+                UartClass.UartBootloaderStart(UartClass.SerialCom, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, KILL_SW_UPD_TH);
             }
             else if (CanRadio.Checked)
             {
-                CanbusClass.CanBootloaderStart(CanbusClass.channel, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel);
+                CanbusClass.CanBootloaderStart(CanbusClass.channel, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, KILL_SW_UPD_TH);
             }
         }
         void ReWriteDatas(string[] data)
@@ -119,13 +121,6 @@ namespace NXP_OttoBugger
                     string data = reader.ReadToEnd();
                     ReWriteDatas(data.Split(','));
                 }
-<<<<<<< HEAD
-            }
-            catch (Exception EX)
-            {
-                MessageBox.Show(EX.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-=======
->>>>>>> cc62eaa3cd2a51ae68ab35a3cc914791fb8e5006
             }
             catch (Exception EX)
             {
@@ -158,6 +153,8 @@ namespace NXP_OttoBugger
             {
                 CanbusClass.CanDisconnect(CanbusClass.channel);
             }
+            KILL_SW_UPD_TH = true;
+            while (!KILL_SW_UPD_TH);
             using (StreamWriter writer = new StreamWriter(file))
             {
                 string commod = UartRadio.Checked == true ? "UART" : "CAN";
@@ -325,7 +322,7 @@ namespace NXP_OttoBugger
         }
         private void Sw_UpdateStartButton_Click(object sender, EventArgs e)
         {
-            Thread SW_UPD_TH = new Thread(StartUpgradeSW);
+            SW_UPD_TH = new Thread(StartUpgradeSW);
             SW_UPD_TH.Start();
             //await Task.Run(() => UartClass.LoadAnimation(SwUpdate_ProgressBar));
             //MessageBox.Show(success ? "Y�kleme tamamland�!" : "Y�kleme ba�ar�s�z!");

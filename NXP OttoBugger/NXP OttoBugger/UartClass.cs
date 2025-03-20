@@ -43,7 +43,7 @@ namespace NXP_OttoBugger
 
         }
         public static int SendedDataCount;
-        public static bool UartBootloaderStart(SerialPort serial, string filePath, ProgressBar pb, Button SW_UPD_BUTTON, Label TIME_LABEL)
+        public static bool UartBootloaderStart(SerialPort serial, string filePath, ProgressBar pb, Button SW_UPD_BUTTON, Label TIME_LABEL, bool Kill_Thread_Status)
         {
             if (!serial.IsOpen)
             {
@@ -61,6 +61,11 @@ namespace NXP_OttoBugger
                     if (WaitForMessage(serial, READY_MSG))
                     {
                         break;
+                    }
+                    if (Kill_Thread_Status)
+                    {
+                        Kill_Thread_Status = false;
+                        return false;
                     }
                 }
 
@@ -80,6 +85,11 @@ namespace NXP_OttoBugger
                             pb.Value += 8;
                             break;
                         }
+                        if (Kill_Thread_Status)
+                        {
+                            Kill_Thread_Status = false;
+                            return false;
+                        }
                     }
                 }
 
@@ -88,6 +98,11 @@ namespace NXP_OttoBugger
                 SW_UPD_BUTTON.Enabled = true;
                 pb.Enabled = false;
                 pb.Value = 0;
+                if (Kill_Thread_Status)
+                {
+                    Kill_Thread_Status = false;
+                    return false;
+                }
                 MessageBox.Show("Software Update Successfull!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
@@ -96,6 +111,11 @@ namespace NXP_OttoBugger
                 SW_UPD_BUTTON.Text = "Software Update Start";
                 SW_UPD_BUTTON.Enabled = true;
                 pb.Enabled = false;
+                if (Kill_Thread_Status)
+                {
+                    Kill_Thread_Status = false;
+                    return false;
+                }
                 MessageBox.Show("Software Update Error!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }

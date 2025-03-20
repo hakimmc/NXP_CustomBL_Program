@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-UART,9600,COM6,C:\Users\acalg\Downloads\Adafruit_Feather_ESP32S3_TFT_FactoryTest (1).bin,ABCD,8,1,2,3,4,5,6,7,8,ABCDEF,8,9,A,B,C,D,E,F,0,UARTTX,UARTRX
+CAN,125K,Usb01,C:\Users\ARGE13\Documents\Git\S32K344_Examples\Led_Blink_K344\Debug_FLASH\Led_Blink_K344.bin,ABCD,8,1,2,3,4,5,6,7,8,ABCDEF,8,9,A,B,C,D,E,F,0,UARTTX,UARTRX
 =======
 <<<<<<< HEAD
-CAN,125K,,C:/,20000000,8,1,2,3,4,5,6,7,8,20000000,8,9,A,B,C,D,E,F,G,UARTTX,UARTRX
-=======
-UART,9600,COM3,C:\Users\ARGE13\Documents\Git\S32K344_Examples\Led_Blink_K344\Debug_FLASH\Led_Blink_K344.bin,ABCD,8,1,2,3,4,5,6,7,8,ABCDEF,8,9,A,B,C,D,E,F,0,UARTTX,UARTRX
->>>>>>> cc62eaa3cd2a51ae68ab35a3cc914791fb8e5006
->>>>>>> 6a58f7e84f622c8621d42b973595eca81735b2ec
+CAN

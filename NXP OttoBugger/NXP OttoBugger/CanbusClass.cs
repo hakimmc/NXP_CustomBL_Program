@@ -1,7 +1,9 @@
 ﻿using Peak.Can.Basic;
+using System.Collections;
 using System.IO.Ports;
 using System.Net.Sockets;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NXP_OttoBugger
 {
@@ -13,14 +15,15 @@ namespace NXP_OttoBugger
         public static PcanMessage CanTXMessage = new PcanMessage();
         public static PcanMessage CanRXMessage = new PcanMessage();
         public static uint BOOT_ID = 0x5166;
-        public static MessageType BOOT_MSGTYP = MessageType.Standard;
+        public static uint BOOT_WAKE_ID = 0x5165;
+        public static MessageType BOOT_MSGTYP = MessageType.Extended;
         public static uint BOOT_DLC = 8;
         public static byte[] BOOT_START_DATA = {0x4F, 0x54, 0x54, 0x4F, 0x0, 0x0, 0x0, 0x0};
         public static bool IsCanOpen = false;
-
+        public static UInt16 BOOT_CCITT_KEY = 0xCEFA;
         public static byte[] BOOT_RECV_BYTE = new byte[8];
 
-        private static readonly byte[] START_MSG = Encoding.ASCII.GetBytes("!OTTOWAKE!");
+        private static readonly byte[] START_MSG = Encoding.ASCII.GetBytes("OTTOWAKE");
         private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!OTTOSTR");
         private static readonly byte[] NEXT_MSG = Encoding.ASCII.GetBytes("!OTTONXT");
         private static readonly byte[] END_MSG = Encoding.ASCII.GetBytes("!OTTOJMP");
@@ -80,10 +83,13 @@ namespace NXP_OttoBugger
         spawn:
             Api.Read(PcanChannel, out CanRXMessage);
             if (CanRXMessage.ID != ID || CanRXMessage.MsgType != MSG_FRMT || CanRXMessage.DLC != DLC) goto spawn;
-
+            for(int i = 0; i < 8; i++)
+            {
+                data[i] = CanRXMessage.Data[i];
+            }
             return true;
         }
-        public static bool CanBootloaderStart(PcanChannel PcanChannel, string filePath, ProgressBar pb, Button SW_UPD_BUTTON, Label TIME_LABEL)
+        public static bool CanBootloaderStart(PcanChannel PcanChannel, string filePath, ProgressBar pb, Button SW_UPD_BUTTON, Label TIME_LABEL, bool Kill_Thread_Status)
         {
             try
             {
@@ -97,10 +103,15 @@ namespace NXP_OttoBugger
                     {
                         BOOT_START_DATA[indx+4] = (byte)( 0xFF & (unixTimestamp >> (24-(8*indx))));
                     }
-                    CanTransmit(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, BOOT_START_DATA);
+                    CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, BOOT_START_DATA);
                     if (WaitForMessage(PcanChannel, READY_MSG))
                     {
                         break;
+                    }
+                    if (Kill_Thread_Status)
+                    {
+                        Kill_Thread_Status = false;
+                        return false;
                     }
                 }
 
@@ -110,7 +121,6 @@ namespace NXP_OttoBugger
                 for (int i = 0; i < totalChunks; i++)
                 {
                     byte[] packet = fileChunks[i];
-
                     while (true)
                     {
                         CanTransmit(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, packet);
@@ -118,6 +128,12 @@ namespace NXP_OttoBugger
                         {
                             pb.Value += 4;
                         }
+                        if (Kill_Thread_Status)
+                        {
+                            Kill_Thread_Status = false;
+                            return false;
+                        }
+                        break;
                     }
                 }
                 CanTransmit(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, END_MSG);
@@ -125,6 +141,11 @@ namespace NXP_OttoBugger
                 SW_UPD_BUTTON.Enabled = true;
                 pb.Enabled = false;
                 pb.Value = 0;
+                if (Kill_Thread_Status)
+                {
+                    Kill_Thread_Status = false;
+                    return false;
+                }
                 MessageBox.Show("Software Update Successfull!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
@@ -133,6 +154,11 @@ namespace NXP_OttoBugger
                 SW_UPD_BUTTON.Text = "Software Update Start";
                 SW_UPD_BUTTON.Enabled = true;
                 pb.Enabled = false;
+                if (Kill_Thread_Status)
+                {
+                    Kill_Thread_Status = false;
+                    return false;
+                }
                 MessageBox.Show("Software Update Error!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -145,11 +171,12 @@ namespace NXP_OttoBugger
         private static bool WaitForMessage(PcanChannel PcanChannel, byte[] expectedMsg)
         {
             DateTime startTime = DateTime.Now;
-            while ((DateTime.Now - startTime).TotalMilliseconds < 5000)
+            while ((DateTime.Now - startTime).TotalMilliseconds < 2000)
             {
                 CanReceive(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, BOOT_RECV_BYTE);
-                if (BOOT_RECV_BYTE.SequenceEqual(expectedMsg))
+                if (Compare(BOOT_RECV_BYTE, expectedMsg, 8))
                 {
+                    //MessageBox.Show($"ID : {CanRXMessage.ID}\nDATA0 : {CanRXMessage.Data[0]}\nDATA1 : {CanRXMessage.Data[1]}\nDATA2 : {CanRXMessage.Data[2]}\nDATA3 : {CanRXMessage.Data[3]}\nDATA4 : {CanRXMessage.Data[4]}\nDATA5 : {CanRXMessage.Data[5]}\nDATA6 : {CanRXMessage.Data[6]}\nDATA7 : {CanRXMessage.Data[7]}\n");
                     return true;
                 }
             }
@@ -176,19 +203,19 @@ namespace NXP_OttoBugger
                 packet[0] = (byte)'~';
                 packet[1] = (byte)DataIndexController++;
                 DataIndexController = DataIndexController > 1 ? 0 : 1;
-                Array.Copy(chunk, 0, packet, 1, chunkSize);
-                byte[] crc = CalculateCRC(chunk);
+                Array.Copy(chunk, 0, packet, 2, chunkSize);
+                byte[] crc = CalculateCRC(packet, 6);
                 packet[chunkSize + 2] = crc[0];
                 packet[chunkSize + 3] = crc[1];
                 chunks[i] = packet;
             }
             return chunks;
         }
-        private static byte[] CalculateCRC(byte[] data)
+        private static byte[] CalculateCRC(byte[] data, uint Length)
         {
             const ushort poly = 4129;
             ushort[] table = new ushort[256];
-            ushort initialValue = 0xffff;
+            ushort initialValue = BOOT_CCITT_KEY;
             ushort temp, a;
             ushort crc = initialValue;
             for (int i = 0; i < table.Length; ++i)
@@ -205,7 +232,7 @@ namespace NXP_OttoBugger
                 }
                 table[i] = temp;
             }
-            for (int i = 0; i < data.Length; ++i)
+            for (int i = 0; i < Length; ++i)
             {
                 crc = (ushort)((crc << 8) ^ table[((crc >> 8) ^ (0xFF & data[i]))]);
             }
@@ -213,6 +240,15 @@ namespace NXP_OttoBugger
             CRC_CCITT[0] = (byte)(crc >> 8);
             CRC_CCITT[1] = (byte)(crc & 0xFF);
             return CRC_CCITT;
+        }
+
+        private static bool Compare(byte[] Value_1, byte[] Value_2, uint Length)
+        {
+            for(int i=0;i<Length;i++)
+            {
+                if (Value_1[i] != Value_2[i]) return false;
+            }
+            return true;
         }
 
     }
