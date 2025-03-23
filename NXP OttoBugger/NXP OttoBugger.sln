@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NXP OttoBugger", "NXP OttoBugger\NXP OttoBugger.csproj", "{2DF25EB9-6AD7-476C-96E2-E48454234BE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NXP OttoBugger", "NXP OttoBugger\NXP OttoBugger.csproj", "{2DF25EB9-6AD7-476C-96E2-E48454234BE4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NXP OttoBugger Setup", "NXP OttoBugger Setup", "{20A3C5A6-48F2-4A9F-8CC6-98946DC42BD1}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NXP OttoBugger Setup", "NXP OttoBugger Setup\NXP OttoBugger Setup.vdproj", "{547C59E4-3431-4DE4-872A-6DA7F9A85CF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,14 @@ Global
 		{2DF25EB9-6AD7-476C-96E2-E48454234BE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DF25EB9-6AD7-476C-96E2-E48454234BE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DF25EB9-6AD7-476C-96E2-E48454234BE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{547C59E4-3431-4DE4-872A-6DA7F9A85CF0}.Debug|Any CPU.ActiveCfg = Debug
+		{547C59E4-3431-4DE4-872A-6DA7F9A85CF0}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{547C59E4-3431-4DE4-872A-6DA7F9A85CF0} = {20A3C5A6-48F2-4A9F-8CC6-98946DC42BD1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F964356B-FFC6-44A5-B7BD-5B0EBD5DD138}

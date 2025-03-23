@@ -18,12 +18,13 @@ namespace NXP_OttoBugger
         public static uint BOOT_WAKE_ID = 0x5165;
         public static MessageType BOOT_MSGTYP = MessageType.Extended;
         public static uint BOOT_DLC = 8;
-        public static byte[] BOOT_START_DATA = {0x4F, 0x54, 0x54, 0x4F, 0x0, 0x0, 0x0, 0x0};
+        //public static byte[] BOOT_START_DATA = {0x4F, 0x54, 0x54, 0x4F, 0x0, 0x0, 0x0, 0x0};
         public static bool IsCanOpen = false;
-        public static UInt16 BOOT_CCITT_KEY = 0xCEFA;
-        public static byte[] BOOT_RECV_BYTE = new byte[8];
+        private static UInt16 BOOT_CCITT_KEY = 0xCEFA;
+        private static byte[] BOOT_RECV_BYTE = new byte[8];
 
-        private static readonly byte[] START_MSG = Encoding.ASCII.GetBytes("OTTOWAKE");
+        private static readonly byte[] START_MSG_CFG = Encoding.ASCII.GetBytes("!CFGxxxx");
+        private static readonly byte[] START_MSG_APP = Encoding.ASCII.GetBytes("!APPxxxx");
         private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!OTTOSTR");
         private static readonly byte[] NEXT_MSG = Encoding.ASCII.GetBytes("!OTTONXT");
         private static readonly byte[] END_MSG = Encoding.ASCII.GetBytes("!OTTOJMP");
@@ -96,24 +97,54 @@ namespace NXP_OttoBugger
                 pb.Enabled = true;
                 SW_UPD_BUTTON.Text = "Software Updating";
                 SW_UPD_BUTTON.Enabled = false;
-                while (true)
+                switch (GeneralProgramClass.ModeForUpload)
                 {
-                    int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                    for (int indx = 0; indx < 4; indx++)
+                    case GeneralProgramClass.UploadMode.CONFIG:
                     {
-                        BOOT_START_DATA[indx+4] = (byte)( 0xFF & (unixTimestamp >> (24-(8*indx))));
-                    }
-                    CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, BOOT_START_DATA);
-                    if (WaitForMessage(PcanChannel, READY_MSG))
-                    {
+                        while (true)
+                        {
+                            int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                            for (int indx = 0; indx < 4; indx++)
+                            {
+                                START_MSG_CFG[indx + 4] = (byte)(0xFF & (unixTimestamp >> (24 - (8 * indx))));
+                            }
+                            CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, START_MSG_CFG);
+                            if (WaitForMessage(PcanChannel, READY_MSG))
+                            {
+                                break;
+                            }
+                            if (Kill_Thread_Status)
+                            {
+                                Kill_Thread_Status = false;
+                                return false;
+                            }
+                        }
                         break;
                     }
-                    if (Kill_Thread_Status)
+                    case GeneralProgramClass.UploadMode.PROGRAM:
                     {
-                        Kill_Thread_Status = false;
-                        return false;
+                        while (true)
+                        {
+                            int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                            for (int indx = 0; indx < 4; indx++)
+                            {
+                                START_MSG_APP[indx + 4] = (byte)(0xFF & (unixTimestamp >> (24 - (8 * indx))));
+                            }
+                            CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, START_MSG_APP);
+                            if (WaitForMessage(PcanChannel, READY_MSG))
+                            {
+                                break;
+                            }
+                            if (Kill_Thread_Status)
+                            {
+                                Kill_Thread_Status = false;
+                                return false;
+                            }
+                        }
+                        break;
                     }
                 }
+                
 
                 byte[][] fileChunks = ReadBinFile(filePath);
                 int totalChunks = fileChunks.Length;

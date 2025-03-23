@@ -7,7 +7,8 @@ namespace NXP_OttoBugger
     {
         public static SerialPort SerialCom;
         public static string[] baudrates = { "9600", "115200" };
-        private static readonly byte[] START_MSG = Encoding.ASCII.GetBytes("!OTTOWAKE!");
+        private static readonly byte[] START_MSG_CFG = Encoding.ASCII.GetBytes("!OTTO_CFG!");
+        private static readonly byte[] START_MSG_APP = Encoding.ASCII.GetBytes("!OTTO_APP!");
         private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!STR");
         private static readonly byte[] NEXT_MSG = Encoding.ASCII.GetBytes("!NXT");
         private static readonly byte[] END_MSG = Encoding.ASCII.GetBytes("!OTTOJUMP!");
@@ -55,19 +56,45 @@ namespace NXP_OttoBugger
                 pb.Enabled = true;
                 SW_UPD_BUTTON.Text = "Software Updating";
                 SW_UPD_BUTTON.Enabled = false;
-                while (true)
+                
+                switch (GeneralProgramClass.ModeForUpload)
                 {
-                    serial.Write(START_MSG, 0, START_MSG.Length);
-                    if (WaitForMessage(serial, READY_MSG))
+                    case GeneralProgramClass.UploadMode.CONFIG:
                     {
+                        while (true)
+                        {
+                            serial.Write(START_MSG_CFG, 0, START_MSG_CFG.Length);
+                            if (WaitForMessage(serial, READY_MSG))
+                            {
+                                break;
+                            }
+                            if (Kill_Thread_Status)
+                            {
+                                Kill_Thread_Status = false;
+                                return false;
+                            }
+                        }
                         break;
                     }
-                    if (Kill_Thread_Status)
+                    case GeneralProgramClass.UploadMode.PROGRAM:
                     {
-                        Kill_Thread_Status = false;
-                        return false;
+                        while (true)
+                        {
+                            serial.Write(START_MSG_APP, 0, START_MSG_APP.Length);
+                            if (WaitForMessage(serial, READY_MSG))
+                            {
+                                break;
+                            }
+                            if (Kill_Thread_Status)
+                            {
+                                Kill_Thread_Status = false;
+                                return false;
+                            }
+                        }
+                        break;
                     }
                 }
+                
 
                 byte[][] fileChunks = ReadBinFile(filePath);
                 int totalChunks = fileChunks.Length;

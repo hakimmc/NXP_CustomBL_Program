@@ -317,6 +317,14 @@ namespace NXP_OttoBugger
                 filename_label.Text = "Filename : " + ofd.SafeFileName;
                 Sw_UpdateStartButton.Enabled = true;
                 SwUpdate_ProgressBar.Maximum = Convert.ToInt32((new FileInfo(ofd.FileName).Length));
+                if (filename_label.Text.EndsWith(".bin"))
+                {
+                    GeneralProgramClass.ModeForUpload = GeneralProgramClass.UploadMode.PROGRAM;
+                }
+                else // .cfg
+                {
+                    GeneralProgramClass.ModeForUpload = GeneralProgramClass.UploadMode.CONFIG;
+                }
             }
 
         }

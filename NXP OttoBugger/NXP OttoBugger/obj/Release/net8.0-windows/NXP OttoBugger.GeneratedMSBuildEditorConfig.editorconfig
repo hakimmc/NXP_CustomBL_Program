@@ -14,6 +14,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = NXP_OttoBugger
-build_property.ProjectDir = C:\Users\acalg\Source\Repos\hakimmc\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\
+build_property.ProjectDir = C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
