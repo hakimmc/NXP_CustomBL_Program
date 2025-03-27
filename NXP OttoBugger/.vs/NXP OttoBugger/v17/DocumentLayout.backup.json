@@ -7,19 +7,23 @@
       "RelativeMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|solutionrelative:nxp ottobugger\\canbusclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|c:\\users\\arge13\\documents\\git\\nxp_custombl_program\\nxp ottobugger\\nxp ottobugger\\nxp ottobugger.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|solutionrelative:nxp ottobugger\\nxp ottobugger.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|c:\\users\\arge13\\documents\\git\\nxp_custombl_program\\nxp ottobugger\\nxp ottobugger\\uartclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|solutionrelative:nxp ottobugger\\uartclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|c:\\users\\arge13\\documents\\git\\nxp_custombl_program\\nxp ottobugger\\nxp ottobugger\\ottobugermain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|solutionrelative:nxp ottobugger\\ottobugermain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\nxp ottobugger\\ottobugermain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|solutionrelative:nxp ottobugger\\ottobugermain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|c:\\users\\arge13\\documents\\git\\nxp_custombl_program\\nxp ottobugger\\nxp ottobugger\\ottobugermain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|solutionrelative:nxp ottobugger\\ottobugermain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|c:\\users\\arge13\\documents\\git\\nxp_custombl_program\\nxp ottobugger\\nxp ottobugger\\ottobugermain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DF25EB9-6AD7-476C-96E2-E48454234BE4}|NXP OttoBugger\\NXP OttoBugger.csproj|solutionrelative:nxp ottobugger\\ottobugermain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -29,8 +33,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NXP OttoBugger",
+              "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXP OttoBugger.csproj",
+              "RelativeDocumentMoniker": "NXP OttoBugger\\NXP OttoBugger.csproj",
+              "ToolTip": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXP OttoBugger.csproj",
+              "RelativeToolTip": "NXP OttoBugger\\NXP OttoBugger.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-03-20T14:30:22.203Z"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
@@ -39,10 +54,9 @@
               "RelativeDocumentMoniker": "NXP OttoBugger\\UartClass.cs",
               "ToolTip": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\UartClass.cs",
               "RelativeToolTip": "NXP OttoBugger\\UartClass.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAEwC0AAACJAAAAAAAAAA==",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAlwH8AAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-20T05:36:11.628Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-20T05:36:11.628Z"
             },
             {
               "$type": "Document",
@@ -50,16 +64,16 @@
               "Title": "CanbusClass.cs",
               "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\CanbusClass.cs",
               "RelativeDocumentMoniker": "NXP OttoBugger\\CanbusClass.cs",
-              "ToolTip": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\CanbusClass.cs*",
-              "RelativeToolTip": "NXP OttoBugger\\CanbusClass.cs*",
-              "ViewState": "AgIAAGYAAAAAAAAAAAAcwH0AAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\CanbusClass.cs",
+              "RelativeToolTip": "NXP OttoBugger\\CanbusClass.cs",
+              "ViewState": "AgIAAOkAAAAAAAAAAADwv/QAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-20T05:14:20.04Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Microsoft.Common.CurrentVersion.targets",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
@@ -67,12 +81,11 @@
               "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
               "ViewState": "AgIAAK8TAAAAAAAAAAAAAMYTAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
-              "WhenOpened": "2025-03-20T05:18:14.38Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-20T05:18:14.38Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "OttobugerMain.cs",
               "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\OttobugerMain.cs",
               "RelativeDocumentMoniker": "NXP OttoBugger\\OttobugerMain.cs",
@@ -85,15 +98,14 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "OttobugerMain.cs [Tasar\u0131m]",
               "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\OttobugerMain.cs",
               "RelativeDocumentMoniker": "NXP OttoBugger\\OttobugerMain.cs",
               "ToolTip": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\OttobugerMain.cs [Tasar\u0131m]",
               "RelativeToolTip": "NXP OttoBugger\\OttobugerMain.cs [Tasar\u0131m]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-13T12:37:38.256Z",
-              "EditorCaption": " [Tasar\u0131m]"
+              "WhenOpened": "2025-03-13T12:37:38.256Z"
             }
           ]
         }

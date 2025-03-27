@@ -1,4 +1,4 @@
-UART,9600,COM6,C:\Users\ARGE13\Documents\Git\S32K344_Examples\Led_Blink_K344\Debug_FLASH\Led_Blink_K344.bin,ABCD,8,1,2,3,4,5,6,7,8,ABCDEF,8,9,A,B,C,D,E,F,0,UARTTX,UARTRX
+CAN,500K,Usb01,C:\Users\ARGE13\Documents\cans32\FlexCAN_Ip_Example_S32K344\Debug_FLASH\FlexCAN_Ip_Example_S32K344.bin,ABCD,8,1,2,3,4,5,6,7,8,ABCDEF,8,9,A,B,C,D,E,F,0,UARTTX,UARTRX
 =======
 <<<<<<< HEAD
 CAN
