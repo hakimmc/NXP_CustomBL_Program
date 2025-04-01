@@ -16,5 +16,7 @@ namespace NXP_OttoBugger
             PROGRAM
         }
         public static UploadMode ModeForUpload;
+        public static bool READCFG = false;
+        public static string DefaultFileLocation;
     }
 }

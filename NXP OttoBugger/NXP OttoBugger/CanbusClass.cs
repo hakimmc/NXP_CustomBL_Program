@@ -23,6 +23,8 @@ namespace NXP_OttoBugger
         private static UInt16 BOOT_CCITT_KEY = 0xCEFA;
         private static byte[] BOOT_RECV_BYTE = new byte[8];
 
+        public static readonly byte[] START_BL_TX = Encoding.ASCII.GetBytes("!BOOTSTT");
+        public static readonly byte[] START_BL_RX = Encoding.ASCII.GetBytes("!BOOTSTD");
         private static readonly byte[] START_MSG_CFG = Encoding.ASCII.GetBytes("!CFGxxxx");
         private static readonly byte[] START_MSG_APP = Encoding.ASCII.GetBytes("!APPxxxx");
         private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!OTTOSTR");
@@ -199,7 +201,7 @@ namespace NXP_OttoBugger
                 SW_UPD_BUTTON.Enabled = true;
             }*/
         }
-        private static bool WaitForMessage(PcanChannel PcanChannel, byte[] expectedMsg)
+        public static bool WaitForMessage(PcanChannel PcanChannel, byte[] expectedMsg)
         {
             DateTime startTime = DateTime.Now;
             while ((DateTime.Now - startTime).TotalMilliseconds < 2000)

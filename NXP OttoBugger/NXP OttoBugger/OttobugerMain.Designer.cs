@@ -36,6 +36,7 @@
             BaudCombobox = new ComboBox();
             ConnectButton = new Button();
             CFG_GB = new GroupBox();
+            Create_Config_File = new Button();
             OpenTest_Window_Button = new Button();
             UART_COM_GB = new GroupBox();
             UartComportCombobox = new ComboBox();
@@ -84,6 +85,8 @@
             label3 = new Label();
             CanDatasTXID = new TextBox();
             label2 = new Label();
+            SYSTEMID = new NumericUpDown();
+            label1 = new Label();
             COMM_MODE_GB.SuspendLayout();
             BAUD_GB.SuspendLayout();
             CFG_GB.SuspendLayout();
@@ -92,6 +95,7 @@
             TEST_GB.SuspendLayout();
             UART_TEST_GB.SuspendLayout();
             CAN_TEST_GB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)SYSTEMID).BeginInit();
             SuspendLayout();
             // 
             // SwUpdate_ProgressBar
@@ -166,6 +170,7 @@
             // 
             // CFG_GB
             // 
+            CFG_GB.Controls.Add(Create_Config_File);
             CFG_GB.Controls.Add(OpenTest_Window_Button);
             CFG_GB.Controls.Add(UART_COM_GB);
             CFG_GB.Controls.Add(ConnectButton);
@@ -178,13 +183,23 @@
             CFG_GB.TabStop = false;
             CFG_GB.Text = "Configuration";
             // 
+            // Create_Config_File
+            // 
+            Create_Config_File.Location = new Point(117, 50);
+            Create_Config_File.Name = "Create_Config_File";
+            Create_Config_File.Size = new Size(119, 28);
+            Create_Config_File.TabIndex = 8;
+            Create_Config_File.Text = "Create Config File";
+            Create_Config_File.UseVisualStyleBackColor = true;
+            Create_Config_File.Click += Create_Config_File_Click;
+            // 
             // OpenTest_Window_Button
             // 
             OpenTest_Window_Button.Location = new Point(117, 22);
             OpenTest_Window_Button.Name = "OpenTest_Window_Button";
-            OpenTest_Window_Button.Size = new Size(119, 53);
+            OpenTest_Window_Button.Size = new Size(119, 28);
             OpenTest_Window_Button.TabIndex = 7;
-            OpenTest_Window_Button.Text = "Open Test Window";
+            OpenTest_Window_Button.Text = "Open Side Window";
             OpenTest_Window_Button.UseVisualStyleBackColor = true;
             OpenTest_Window_Button.Click += OpenTest_Window_Button_Click;
             // 
@@ -266,16 +281,16 @@
             TEST_GB.Controls.Add(SendData);
             TEST_GB.Controls.Add(UART_TEST_GB);
             TEST_GB.Controls.Add(CAN_TEST_GB);
-            TEST_GB.Location = new Point(270, 7);
+            TEST_GB.Location = new Point(270, 29);
             TEST_GB.Name = "TEST_GB";
-            TEST_GB.Size = new Size(377, 335);
+            TEST_GB.Size = new Size(377, 313);
             TEST_GB.TabIndex = 11;
             TEST_GB.TabStop = false;
             TEST_GB.Text = "Test Messages";
             // 
             // SendData
             // 
-            SendData.Location = new Point(6, 301);
+            SendData.Location = new Point(6, 282);
             SendData.Name = "SendData";
             SendData.Size = new Size(363, 23);
             SendData.TabIndex = 9;
@@ -680,18 +695,38 @@
             label2.TabIndex = 0;
             label2.Text = "TX";
             // 
+            // SYSTEMID
+            // 
+            SYSTEMID.Location = new Point(580, 7);
+            SYSTEMID.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            SYSTEMID.Name = "SYSTEMID";
+            SYSTEMID.Size = new Size(59, 23);
+            SYSTEMID.TabIndex = 13;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(511, 11);
+            label1.Name = "label1";
+            label1.Size = new Size(69, 15);
+            label1.TabIndex = 12;
+            label1.Text = "SYSTEM ID :";
+            // 
             // OttobuggerV3
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(655, 351);
+            Controls.Add(SYSTEMID);
             Controls.Add(TEST_GB);
             Controls.Add(SW_UPD_GB);
+            Controls.Add(label1);
             Controls.Add(CFG_GB);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "OttobuggerV3";
-            Text = "OttoBugger";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "NXPBugger";
             FormClosing += OttobuggerV3_FormClosing;
             Load += OttobuggerV3_Load;
             MouseDoubleClick += OttobuggerV3_MouseDoubleClick;
@@ -707,7 +742,9 @@
             UART_TEST_GB.PerformLayout();
             CAN_TEST_GB.ResumeLayout(false);
             CAN_TEST_GB.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)SYSTEMID).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -769,5 +806,8 @@
         public Label label14;
         public TextBox UartDatasTX;
         public Button OpenTest_Window_Button;
+        public Button Create_Config_File;
+        private NumericUpDown SYSTEMID;
+        private Label label1;
     }
 }

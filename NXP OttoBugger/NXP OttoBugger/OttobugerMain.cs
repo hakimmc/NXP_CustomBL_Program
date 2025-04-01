@@ -13,7 +13,7 @@ namespace NXP_OttoBugger
             InitializeComponent();
         }
 
-        string DefaultFileLocation;
+        //string DefaultFileLocation;
         public bool flag = false;
         public int DoubleClickCounter = 0;
         Thread SW_UPD_TH;
@@ -22,11 +22,13 @@ namespace NXP_OttoBugger
         {
             if (UartRadio.Checked)
             {
-                UartClass.UartBootloaderStart(UartClass.SerialCom, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, KILL_SW_UPD_TH);
+                UartClass.UartBootloaderStart(UartClass.SerialCom, GeneralProgramClass.DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, KILL_SW_UPD_TH);
             }
             else if (CanRadio.Checked)
             {
-                CanbusClass.CanBootloaderStart(CanbusClass.channel, DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, KILL_SW_UPD_TH);
+                CanbusClass.BOOT_ID = 0x5166 + (uint)SYSTEMID.Value;
+                CanbusClass.BOOT_WAKE_ID = 0x5165 + (uint)SYSTEMID.Value;
+                CanbusClass.CanBootloaderStart(CanbusClass.channel, GeneralProgramClass.DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, KILL_SW_UPD_TH);
             }
         }
         void ReWriteDatas(string[] data)
@@ -67,7 +69,7 @@ namespace NXP_OttoBugger
                 BaudCombobox.Text = Convert.ToString(BaudCombobox.Items[0]);
             }
             UartComportCombobox.Text = data[2];
-            DefaultFileLocation = data[3];
+            GeneralProgramClass.DefaultFileLocation = data[3];
             CanDatasTXID.Text = data[4];
             CanDatasTXDLC.Text = data[5];
             CanDatasTXD1.Text = data[6];
@@ -134,18 +136,18 @@ namespace NXP_OttoBugger
             {
                 this.Size = new Size(286, 390);
                 testwindow = false;
-                OpenTest_Window_Button.Text = "Open Test Window";
+                OpenTest_Window_Button.Text = "Open Side Window";
             }
             else
             {
                 this.Size = new Size(671, 390);
                 testwindow = true;
-                OpenTest_Window_Button.Text = "Close Test Window";
+                OpenTest_Window_Button.Text = "Close Side Window";
             }
         }
         private void OttobuggerV3_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(UartClass.SerialCom.IsOpen)
+            if (UartClass.SerialCom.IsOpen)
             {
                 UartClass.SerialCom.Close();
             }
@@ -154,14 +156,14 @@ namespace NXP_OttoBugger
                 CanbusClass.CanDisconnect(CanbusClass.channel);
             }
             KILL_SW_UPD_TH = true;
-            while (!KILL_SW_UPD_TH);
+            while (!KILL_SW_UPD_TH) ;
             using (StreamWriter writer = new StreamWriter(file))
             {
                 string commod = UartRadio.Checked == true ? "UART" : "CAN";
                 writer.Write($"{commod}," +
                     $"{BaudCombobox.Text}," +
                     $"{UartComportCombobox.Text}," +
-                    $"{DefaultFileLocation}," +
+                    $"{GeneralProgramClass.DefaultFileLocation}," +
                     $"{CanDatasTXID.Text}," +
                     $"{CanDatasTXDLC.Text}," +
                     $"{CanDatasTXD1.Text}," +
@@ -252,6 +254,13 @@ namespace NXP_OttoBugger
                         TEST_GB.Enabled = true;
                         UART_TEST_GB.Enabled = false;
                         CAN_TEST_GB.Enabled = true;
+                        CanbusClass.BOOT_ID = 0x5166 + (uint)SYSTEMID.Value;
+                        CanbusClass.BOOT_WAKE_ID = 0x5165 + (uint)SYSTEMID.Value;
+                        /*CanbusClass.CanTransmit(CanbusClass.channel, CanbusClass.BOOT_WAKE_ID, CanbusClass.BOOT_MSGTYP, CanbusClass.BOOT_DLC, CanbusClass.START_BL_TX);
+                        if (CanbusClass.WaitForMessage(CanbusClass.channel, CanbusClass.START_BL_RX))
+                        {
+                            MessageBox.Show("Device In Boot Mode!","Info",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                        }*/
                     }
                 }
             }
@@ -310,10 +319,10 @@ namespace NXP_OttoBugger
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Application File |*.bin| Config File|*.cfg";
             ofd.FilterIndex = 1;
-            ofd.InitialDirectory = DefaultFileLocation;
+            ofd.InitialDirectory = GeneralProgramClass.DefaultFileLocation;
             if (DialogResult.OK == ofd.ShowDialog())
             {
-                DefaultFileLocation = ofd.FileName;
+                GeneralProgramClass.DefaultFileLocation = ofd.FileName;
                 filename_label.Text = "Filename : " + ofd.SafeFileName;
                 Sw_UpdateStartButton.Enabled = true;
                 SwUpdate_ProgressBar.Maximum = Convert.ToInt32((new FileInfo(ofd.FileName).Length));
@@ -428,13 +437,35 @@ namespace NXP_OttoBugger
                 string comport = UartComportCombobox.Text;
                 UartComportCombobox.Items.Clear();
                 UartComportCombobox.Items.AddRange(SerialPort.GetPortNames());
-                foreach(string ports in UartComportCombobox.Items)
+                foreach (string ports in UartComportCombobox.Items)
                 {
-                    if(comport == ports) 
+                    if (comport == ports)
                     {
                         UartComportCombobox.Text = comport;
                         break;
                     }
+                }
+            }
+        }
+        bool debugbool = true;
+        private void Create_Config_File_Click(object sender, EventArgs e)
+        {
+            if(debugbool)
+            {
+                Config_Creator cc = new Config_Creator();
+                cc.ShowDialog();
+            }
+            else
+            {
+                LoginPage lp = new LoginPage();
+                if (DialogResult.OK == lp.ShowDialog())
+                {
+                    Config_Creator cc = new Config_Creator();
+                    cc.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Username or Password is false", "Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
