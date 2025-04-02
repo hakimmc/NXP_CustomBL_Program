@@ -22,13 +22,13 @@ namespace NXP_OttoBugger
         {
             if (UartRadio.Checked)
             {
-                UartClass.UartBootloaderStart(UartClass.SerialCom, GeneralProgramClass.DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, KILL_SW_UPD_TH);
+                UartClass.UartBootloaderStart(UartClass.SerialCom, GeneralProgramClass.DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, ref KILL_SW_UPD_TH);
             }
             else if (CanRadio.Checked)
             {
                 CanbusClass.BOOT_ID = 0x5166 + (uint)SYSTEMID.Value;
                 CanbusClass.BOOT_WAKE_ID = 0x5165 + (uint)SYSTEMID.Value;
-                CanbusClass.CanBootloaderStart(CanbusClass.channel, GeneralProgramClass.DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, KILL_SW_UPD_TH);
+                CanbusClass.CanBootloaderStart(CanbusClass.channel, GeneralProgramClass.DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, ref KILL_SW_UPD_TH);
             }
         }
         void ReWriteDatas(string[] data)
@@ -147,6 +147,11 @@ namespace NXP_OttoBugger
         }
         private void OttobuggerV3_FormClosing(object sender, FormClosingEventArgs e)
         {
+            KILL_SW_UPD_TH = true;
+            while (!KILL_SW_UPD_TH)
+            {
+                Thread.Sleep(10);
+            }
             if (UartClass.SerialCom.IsOpen)
             {
                 UartClass.SerialCom.Close();
@@ -155,8 +160,6 @@ namespace NXP_OttoBugger
             {
                 CanbusClass.CanDisconnect(CanbusClass.channel);
             }
-            KILL_SW_UPD_TH = true;
-            while (!KILL_SW_UPD_TH) ;
             using (StreamWriter writer = new StreamWriter(file))
             {
                 string commod = UartRadio.Checked == true ? "UART" : "CAN";

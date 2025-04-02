@@ -15,6 +15,21 @@ namespace NXP_OttoBugger
             CONFIG,
             PROGRAM
         }
+
+        public enum CanMessageState
+        {
+            ERROR,
+            OK,
+            TIMEOUT
+        }
+
+        public enum UartMessageState
+        {
+            ERROR,
+            OK,
+            TIMEOUT
+        }
+
         public static UploadMode ModeForUpload;
         public static bool READCFG = false;
         public static string DefaultFileLocation;

@@ -1,5 +1,7 @@
-﻿using System.IO.Ports;
+﻿using Peak.Can.Basic;
+using System.IO.Ports;
 using System.Text;
+using static NXP_OttoBugger.GeneralProgramClass;
 
 namespace NXP_OttoBugger
 {
@@ -44,7 +46,7 @@ namespace NXP_OttoBugger
 
         }
         public static int SendedDataCount;
-        public static bool UartBootloaderStart(SerialPort serial, string filePath, ProgressBar pb, Button SW_UPD_BUTTON, Label TIME_LABEL, bool Kill_Thread_Status)
+        public static bool UartBootloaderStart(SerialPort serial, string filePath, ProgressBar pb, Button SW_UPD_BUTTON, Label TIME_LABEL, ref bool Kill_Thread_Status)
         {
             if (!serial.IsOpen)
             {
@@ -54,103 +56,77 @@ namespace NXP_OttoBugger
             try
             {
                 pb.Enabled = true;
-                SW_UPD_BUTTON.Text = "Software Updating";
+                SW_UPD_BUTTON.Text = "Software Update Started!";
                 SW_UPD_BUTTON.Enabled = false;
-                
+
                 switch (GeneralProgramClass.ModeForUpload)
                 {
                     case GeneralProgramClass.UploadMode.CONFIG:
-                    {
-                        while (true)
+                        serial.Write(START_MSG_CFG, 0, START_MSG_CFG.Length);
+                        if (WaitForMessage(serial, READY_MSG, 1000) != UartMessageState.OK)
                         {
-                            serial.Write(START_MSG_CFG, 0, START_MSG_CFG.Length);
-                            if (WaitForMessage(serial, READY_MSG))
-                            {
-                                break;
-                            }
-                            if (Kill_Thread_Status)
-                            {
-                                Kill_Thread_Status = false;
-                                return false;
-                            }
+                            return false;
                         }
+                        SW_UPD_BUTTON.Text = "Software Update Mode : Config";
                         break;
-                    }
+
                     case GeneralProgramClass.UploadMode.PROGRAM:
-                    {
-                        while (true)
+                        serial.Write(START_MSG_APP, 0, START_MSG_APP.Length);
+                        if (WaitForMessage(serial, READY_MSG, 1000) != UartMessageState.OK)
                         {
-                            serial.Write(START_MSG_APP, 0, START_MSG_APP.Length);
-                            if (WaitForMessage(serial, READY_MSG))
-                            {
-                                break;
-                            }
-                            if (Kill_Thread_Status)
-                            {
-                                Kill_Thread_Status = false;
-                                return false;
-                            }
+                            return false;
                         }
+                        SW_UPD_BUTTON.Text = "Software Update Mode : Program";
                         break;
-                    }
                 }
-                
 
                 byte[][] fileChunks = ReadBinFile(filePath);
                 int totalChunks = fileChunks.Length;
 
                 for (int i = 0; i < totalChunks; i++)
                 {
-                    byte[] packet = fileChunks[i];
-
-                    while (true)
+                    if (Kill_Thread_Status)
                     {
-                        serial.Write(packet, 0, packet.Length);
-                        if (WaitForMessage(serial, NEXT_MSG))
-                        {
-                            //SendedDataCount += 8;
-                            pb.Value += 8;
-                            break;
-                        }
-                        if (Kill_Thread_Status)
-                        {
-                            Kill_Thread_Status = false;
-                            return false;
-                        }
+                        Kill_Thread_Status = false;
+                        return false;
                     }
+
+                    byte[] packet = fileChunks[i];
+                    serial.Write(packet, 0, packet.Length);
+
+                    if (WaitForMessage(serial, NEXT_MSG, 1000) != UartMessageState.OK)
+                    {
+                        return false;
+                    }
+                    pb.Value += 4;
+                    SW_UPD_BUTTON.Text = pb.Value / 4 + " / " + pb.Maximum / 4 + " flashed!";
                 }
+
+                SW_UPD_BUTTON.Text = pb.Maximum / 4 + " flashed!";
+                Thread.Sleep(20);
+                SW_UPD_BUTTON.Text = "Software Update Done";
+                Thread.Sleep(20);
 
                 serial.Write(END_MSG, 0, END_MSG.Length);
                 SW_UPD_BUTTON.Text = "Software Update Start";
                 SW_UPD_BUTTON.Enabled = true;
                 pb.Enabled = false;
                 pb.Value = 0;
-                if (Kill_Thread_Status)
-                {
-                    Kill_Thread_Status = false;
-                    return false;
-                }
-                MessageBox.Show("Software Update Successfull!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                MessageBox.Show("Software Update Successful!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
             catch
             {
-                SW_UPD_BUTTON.Text = "Software Update Start";
-                SW_UPD_BUTTON.Enabled = true;
-                pb.Enabled = false;
-                if (Kill_Thread_Status)
-                {
-                    Kill_Thread_Status = false;
-                    return false;
-                }
                 MessageBox.Show("Software Update Error!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            /*finally
+            finally
             {
+                pb.Enabled = false;
                 SW_UPD_BUTTON.Text = "Software Update Start";
                 SW_UPD_BUTTON.Enabled = true;
-            }*/
+            }
         }
         private static byte[][] ReadBinFile(string filePath)
         {
@@ -195,10 +171,10 @@ namespace NXP_OttoBugger
             }
             return (byte)(sum % 255);
         }
-        private static bool WaitForMessage(SerialPort serial, byte[] expectedMsg)
+        private static UartMessageState WaitForMessage(SerialPort serial, byte[] expectedMsg, uint Timeout)
         {
             DateTime startTime = DateTime.Now;
-            while ((DateTime.Now - startTime).TotalMilliseconds < 5000)
+            while ((DateTime.Now - startTime).TotalMilliseconds < Timeout)
             {
                 if (serial.BytesToRead >= expectedMsg.Length)
                 {
@@ -207,11 +183,11 @@ namespace NXP_OttoBugger
 
                     if (response.SequenceEqual(expectedMsg))
                     {
-                        return true;
+                        return UartMessageState.OK;
                     }
                 }
             }
-            return false;
+            return UartMessageState.TIMEOUT;
         }
         
         public static bool Serial_Transmit(SerialPort serial, string Data)
