@@ -11,6 +11,8 @@ namespace NXP_OttoBugger
         public static string[] baudrates = { "9600", "115200" };
         private static readonly byte[] START_MSG_CFG = Encoding.ASCII.GetBytes("!OTTO_CFG!");
         private static readonly byte[] START_MSG_APP = Encoding.ASCII.GetBytes("!OTTO_APP!");
+        private static readonly byte[] WOKEUP_FROM_APP = Encoding.ASCII.GetBytes("!WAKE_APP!");
+        private static readonly byte[] READY_MSG_FROM_APP = Encoding.ASCII.GetBytes("!APP_STR");
         private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!STR");
         private static readonly byte[] NEXT_MSG = Encoding.ASCII.GetBytes("!NXT");
         private static readonly byte[] END_MSG = Encoding.ASCII.GetBytes("!OTTOJUMP!");
@@ -58,7 +60,12 @@ namespace NXP_OttoBugger
                 pb.Enabled = true;
                 SW_UPD_BUTTON.Text = "Software Update Started!";
                 SW_UPD_BUTTON.Enabled = false;
-
+                Thread.Sleep(100);
+                serial.Write(WOKEUP_FROM_APP, 0, WOKEUP_FROM_APP.Length);
+                if (WaitForMessage(serial, READY_MSG_FROM_APP, 1000) == UartMessageState.OK)
+                {
+                    SW_UPD_BUTTON.Text = "Woke Up From App";
+                }
                 switch (GeneralProgramClass.ModeForUpload)
                 {
                     case GeneralProgramClass.UploadMode.CONFIG:

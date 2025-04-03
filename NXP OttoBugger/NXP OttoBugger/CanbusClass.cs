@@ -30,11 +30,12 @@ namespace NXP_OttoBugger
         public static readonly byte[] START_BL_TX = Encoding.ASCII.GetBytes("!BOOTSTT");
         public static readonly byte[] START_BL_RX = Encoding.ASCII.GetBytes("!BOOTSTD");
         private static readonly byte[] START_MSG_CFG = Encoding.ASCII.GetBytes("!CFGxxxx");
+        private static readonly byte[] WOKE_UP_FROM_APP = Encoding.ASCII.GetBytes("!WAKEAPP");
         private static readonly byte[] START_MSG_APP = Encoding.ASCII.GetBytes("!APPxxxx");
+        private static readonly byte[] APP_READY_MSG = Encoding.ASCII.GetBytes("!APPSTRT");
         private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!OTTOSTR");
         private static readonly byte[] NEXT_MSG = Encoding.ASCII.GetBytes("!OTTONXT");
         private static readonly byte[] END_MSG = Encoding.ASCII.GetBytes("!OTTOJMP");
-        private static readonly byte[] SKIP_MSG = Encoding.ASCII.GetBytes("!SKIPJUMP");
 
         public static bool CanConnect(PcanChannel PcanChannel, string BaudRate)
         {
@@ -113,7 +114,12 @@ namespace NXP_OttoBugger
                 pb.Enabled = true;
                 SW_UPD_BUTTON.Text = "Software Update Started!";
                 SW_UPD_BUTTON.Enabled = false;
-
+                Thread.Sleep(100);
+                CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, WOKE_UP_FROM_APP);
+                if (WaitForMessage(PcanChannel, APP_READY_MSG, 1000) == CanMessageState.OK)
+                {
+                    SW_UPD_BUTTON.Text = "Woke Up From App";
+                }
                 switch (GeneralProgramClass.ModeForUpload)
                 {
                     case GeneralProgramClass.UploadMode.CONFIG:
