@@ -33,5 +33,7 @@ namespace NXP_OttoBugger
         public static UploadMode ModeForUpload;
         public static bool READCFG = false;
         public static string DefaultFileLocation;
+        public static bool FormActive_CFG_Creator = false;
+        public static bool FormActive_CFG_Reader = false;
     }
 }

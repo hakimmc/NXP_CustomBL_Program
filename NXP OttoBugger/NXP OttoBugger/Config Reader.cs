@@ -93,10 +93,10 @@ namespace NXP_OttoBugger
             int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             byte[] bytes = new byte[] { 
                 //DATE
-                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 0)))),
-                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 1)))),
+                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 3)))),
                 (byte)(0xFF & (unixTimestamp >> (24 - (8 * 2)))),
-                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 3)))), //0x450000 - 0x450003 4BYTE
+                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 1)))),
+                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 0)))),//0x450000 - 0x450003 4BYTE
                 //SYSTEM ID
                 (byte)(SYSTEMID.Value), //0x450004 - 0x450005 1BYTE
                 //SW VERSION
@@ -119,12 +119,12 @@ namespace NXP_OttoBugger
                 (byte)(PARALLELCELLCOUNT.Value),
                 (byte)(DAISYCHAINCOUNT.Value),
                 //CELL SETTINGS
-                (byte)((Convert.ToInt32(maxcellv.Text))>>8),
                 (byte)((Convert.ToInt32(maxcellv.Text)) & 0xFF),
-                (byte)((Convert.ToInt32(mincellv.Text))>>8),
+                (byte)((Convert.ToInt32(maxcellv.Text))>>8),
                 (byte)((Convert.ToInt32(mincellv.Text)) & 0xFF),
-                (byte)((Convert.ToInt32(tempsensorb.Text))>>8),
+                (byte)((Convert.ToInt32(mincellv.Text))>>8),
                 (byte)((Convert.ToInt32(tempsensorb.Text)) & 0xFF),
+                (byte)((Convert.ToInt32(tempsensorb.Text))>>8),
                 (byte)(defaultsoc.Value),
                 (byte)(defaultsoh.Value),
                 (byte)(maxtemp.Value),
@@ -138,8 +138,8 @@ namespace NXP_OttoBugger
                 MAC_ADDR[3],
                 MAC_ADDR[4],
                 MAC_ADDR[5],
-                (byte)(0xFF),
-                (byte)(0xFF),
+                (byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF), // padding bytes
+                (byte)('!'),(byte)('C'),(byte)('F'),(byte)('G'),
                 (byte)'E',(byte)'O',(byte)'C',(byte)';'
             };
             return bytes;
@@ -166,6 +166,35 @@ namespace NXP_OttoBugger
             maxtemp.Value = maxtemp.Minimum;
             mintemp.Value = mintemp.Minimum;
             tempsensorcount.Value = tempsensorcount.Minimum;
+        }
+
+        private void Config_Reader_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            GeneralProgramClass.FormActive_CFG_Creator = false;
+        }
+
+        private void ReadCfgFromDevice_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void SaveOutputCfgFile_Click(object sender, EventArgs e)
+        {
+            byte[] cfg_bytes = CreateCfg();
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Config File|*.cfg";
+            sfd.FilterIndex = 1;
+            sfd.InitialDirectory = GeneralProgramClass.DefaultFileLocation;
+            sfd.FileName = $"NXP_SW_VER_{MAJORVERSION.Value}_{MINORVERSION.Value}_{BUGFIXVERSION.Value}_COMPANY_{companynum.Value}_USER_{usernamenum.Value}_CFG_FILE";
+            if (DialogResult.OK == sfd.ShowDialog())
+            {
+                GeneralProgramClass.DefaultFileLocation = sfd.FileName;
+                File.WriteAllBytes(sfd.FileName, cfg_bytes);
+                MessageBox.Show(sfd.FileName + " created!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }

@@ -451,6 +451,7 @@
             ReadCfgFromDevice.TabIndex = 24;
             ReadCfgFromDevice.Text = "Read Cfg File From Device";
             ReadCfgFromDevice.UseVisualStyleBackColor = true;
+            ReadCfgFromDevice.Click += ReadCfgFromDevice_Click;
             // 
             // label10
             // 
@@ -653,6 +654,7 @@
             SaveOutputCfgFile.TabIndex = 21;
             SaveOutputCfgFile.Text = "Save Output Cfg File";
             SaveOutputCfgFile.UseVisualStyleBackColor = true;
+            SaveOutputCfgFile.Click += SaveOutputCfgFile_Click;
             // 
             // label1
             // 
@@ -778,6 +780,7 @@
             Name = "Config_Reader";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Config Reader";
+            FormClosing += Config_Reader_FormClosing;
             Load += Config_Reader_Load;
             groupBox5.ResumeLayout(false);
             groupBox5.PerformLayout();

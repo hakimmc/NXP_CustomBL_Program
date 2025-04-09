@@ -414,9 +414,9 @@
             // 
             // GenerateCfg
             // 
-            GenerateCfg.Location = new Point(16, 245);
+            GenerateCfg.Location = new Point(233, 245);
             GenerateCfg.Name = "GenerateCfg";
-            GenerateCfg.Size = new Size(211, 23);
+            GenerateCfg.Size = new Size(229, 23);
             GenerateCfg.TabIndex = 12;
             GenerateCfg.Text = "Generate Cfg File";
             GenerateCfg.UseVisualStyleBackColor = true;
@@ -424,9 +424,9 @@
             // 
             // ReadCfg
             // 
-            ReadCfg.Location = new Point(233, 245);
+            ReadCfg.Location = new Point(16, 245);
             ReadCfg.Name = "ReadCfg";
-            ReadCfg.Size = new Size(229, 23);
+            ReadCfg.Size = new Size(211, 23);
             ReadCfg.TabIndex = 13;
             ReadCfg.Text = "Read Cfg File";
             ReadCfg.UseVisualStyleBackColor = true;
@@ -803,6 +803,7 @@
             Name = "Config_Creator";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "NXPBugger";
+            FormClosing += Config_Creator_FormClosing;
             Load += Config_Creator_Load;
             CANGB.ResumeLayout(false);
             CANGB.PerformLayout();

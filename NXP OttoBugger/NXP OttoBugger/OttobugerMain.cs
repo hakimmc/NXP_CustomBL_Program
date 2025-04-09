@@ -320,7 +320,7 @@ namespace NXP_OttoBugger
         private void select_file_button_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Application File |*.bin| Config File|*.cfg";
+            ofd.Filter = "Application File |*.cwa| Config File|*.cfg";
             ofd.FilterIndex = 1;
             ofd.InitialDirectory = GeneralProgramClass.DefaultFileLocation;
             if (DialogResult.OK == ofd.ShowDialog())
@@ -329,7 +329,7 @@ namespace NXP_OttoBugger
                 filename_label.Text = "Filename : " + ofd.SafeFileName;
                 Sw_UpdateStartButton.Enabled = true;
                 SwUpdate_ProgressBar.Maximum = Convert.ToInt32((new FileInfo(ofd.FileName).Length));
-                if (filename_label.Text.EndsWith(".bin"))
+                if (filename_label.Text.EndsWith(".cwa"))
                 {
                     GeneralProgramClass.ModeForUpload = GeneralProgramClass.UploadMode.PROGRAM;
                 }
@@ -344,8 +344,6 @@ namespace NXP_OttoBugger
         {
             SW_UPD_TH = new Thread(StartUpgradeSW);
             SW_UPD_TH.Start();
-            //await Task.Run(() => UartClass.LoadAnimation(SwUpdate_ProgressBar));
-            //MessageBox.Show(success ? "Y�kleme tamamland�!" : "Y�kleme ba�ar�s�z!");
         }
         private void CanDatas_TextChanged(object sender, EventArgs e)
         {
@@ -451,20 +449,30 @@ namespace NXP_OttoBugger
             }
         }
         bool debugbool = true;
+        bool once_child_form = true;
         private void Create_Config_File_Click(object sender, EventArgs e)
         {
-            if(debugbool)
+            if (debugbool)
             {
-                Config_Creator cc = new Config_Creator();
-                cc.ShowDialog();
+                if (!GeneralProgramClass.FormActive_CFG_Creator)
+                {
+                    Config_Creator cc = new Config_Creator();
+                    cc.Show();
+                    GeneralProgramClass.FormActive_CFG_Creator = true;
+                }
             }
             else
             {
                 LoginPage lp = new LoginPage();
+                lp.Show();
                 if (DialogResult.OK == lp.ShowDialog())
                 {
-                    Config_Creator cc = new Config_Creator();
-                    cc.ShowDialog();
+                    if (!GeneralProgramClass.FormActive_CFG_Creator)
+                    {
+                        Config_Creator cc = new Config_Creator();
+                        cc.Show();
+                        GeneralProgramClass.FormActive_CFG_Creator = true;
+                    }
                 }
                 else
                 {

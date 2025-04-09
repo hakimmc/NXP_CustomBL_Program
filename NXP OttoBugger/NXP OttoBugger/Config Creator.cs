@@ -21,10 +21,10 @@ namespace NXP_OttoBugger
         }
 
 
-        public static bool read_cfg = false; 
+        public static bool read_cfg = false;
         private void Config_Creator_Load(object sender, EventArgs e)
         {
-            
+
             BootModeCB.Text = BootModeCB.Items[0].ToString();
             CAN1_BAUD_CB.Text = CAN1_BAUD_CB.Items[2].ToString();
             CAN2_BAUD_CB.Text = CAN2_BAUD_CB.Items[2].ToString();
@@ -43,7 +43,7 @@ namespace NXP_OttoBugger
             sfd.Filter = "Config File|*.cfg";
             sfd.FilterIndex = 1;
             sfd.InitialDirectory = GeneralProgramClass.DefaultFileLocation;
-            sfd.FileName = $"NXP_{MAJORVERSION.Value}_{MINORVERSION.Value}_{BUGFIXVERSION.Value}_CONFIG_FILE_MAC48_{Encoding.UTF8.GetString(MAC_ADDR)}";
+            sfd.FileName = $"NXP_SW_VER_{MAJORVERSION.Value}_{MINORVERSION.Value}_{BUGFIXVERSION.Value}_COMPANY_{companynum.Value}_USER_{usernamenum.Value}_CFG_FILE";
             if (DialogResult.OK == sfd.ShowDialog())
             {
                 GeneralProgramClass.DefaultFileLocation = sfd.FileName;
@@ -92,9 +92,10 @@ namespace NXP_OttoBugger
                 GeneralProgramClass.DefaultFileLocation = ofd.FileName;
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Title = "Select or Create Target Application File For Assemble With Config";
-                sfd.Filter = "Application File |*.bin";
+                sfd.Filter = "Application File |*.cwa";
                 sfd.FilterIndex = 1;
                 sfd.InitialDirectory = GeneralProgramClass.DefaultFileLocation;
+                sfd.FileName = $"NXP_SW_VER_{MAJORVERSION.Value}_{MINORVERSION.Value}_{BUGFIXVERSION.Value}_COMPANY_{companynum.Value}_USER_{usernamenum.Value}_CWA_FILE";
                 if (DialogResult.OK == sfd.ShowDialog())
                 {
                     GeneralProgramClass.DefaultFileLocation = sfd.FileName;
@@ -148,7 +149,7 @@ namespace NXP_OttoBugger
                     break;
 
                 default:
-                    MessageBox.Show("Geçersiz algoritma seçimi!");
+                    MessageBox.Show("Invalid algorithm selection!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
             }
 
@@ -194,10 +195,10 @@ namespace NXP_OttoBugger
             int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             byte[] bytes = new byte[] { 
                 //DATE
-                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 0)))),
-                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 1)))),
+                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 3)))),
                 (byte)(0xFF & (unixTimestamp >> (24 - (8 * 2)))),
-                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 3)))), //0x450000 - 0x450003 4BYTE
+                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 1)))),
+                (byte)(0xFF & (unixTimestamp >> (24 - (8 * 0)))),//0x450000 - 0x450003 4BYTE
                 //SYSTEM ID
                 (byte)(SYSTEMID.Value), //0x450004 - 0x450005 1BYTE
                 //SW VERSION
@@ -220,12 +221,12 @@ namespace NXP_OttoBugger
                 (byte)(PARALLELCELLCOUNT.Value),
                 (byte)(DAISYCHAINCOUNT.Value),
                 //CELL SETTINGS
-                (byte)((Convert.ToInt32(maxcellv.Text))>>8),
                 (byte)((Convert.ToInt32(maxcellv.Text)) & 0xFF),
-                (byte)((Convert.ToInt32(mincellv.Text))>>8),
+                (byte)((Convert.ToInt32(maxcellv.Text))>>8),
                 (byte)((Convert.ToInt32(mincellv.Text)) & 0xFF),
-                (byte)((Convert.ToInt32(tempsensorb.Text))>>8),
+                (byte)((Convert.ToInt32(mincellv.Text))>>8),
                 (byte)((Convert.ToInt32(tempsensorb.Text)) & 0xFF),
+                (byte)((Convert.ToInt32(tempsensorb.Text))>>8),
                 (byte)(defaultsoc.Value),
                 (byte)(defaultsoh.Value),
                 (byte)(maxtemp.Value),
@@ -239,8 +240,8 @@ namespace NXP_OttoBugger
                 MAC_ADDR[3],
                 MAC_ADDR[4],
                 MAC_ADDR[5],
-                (byte)(0xFF),
-                (byte)(0xFF),
+                (byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF), // padding bytes
+                (byte)('!'),(byte)('C'),(byte)('F'),(byte)('G'),
                 (byte)'E',(byte)'O',(byte)'C',(byte)';'
             };
             return bytes;
@@ -248,8 +249,17 @@ namespace NXP_OttoBugger
 
         private void ReadCfg_Click(object sender, EventArgs e)
         {
-            Config_Reader cr = new Config_Reader();
-            cr.Show();
+            if (!GeneralProgramClass.FormActive_CFG_Reader)
+            {
+                Config_Reader cr = new Config_Reader();
+                cr.Show();
+                GeneralProgramClass.FormActive_CFG_Reader = true;
+            }
+        }
+
+        private void Config_Creator_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            GeneralProgramClass.FormActive_CFG_Creator = false;
         }
     }
 }
