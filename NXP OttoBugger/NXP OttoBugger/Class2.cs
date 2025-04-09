@@ -1,19 +1,15 @@
 ﻿using Peak.Can.Basic;
-using Peak.Can.Basic.BackwardCompatibility;
 using System.Collections;
-using System.Diagnostics;
 using System.IO.Ports;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text;
-using static NXP_OttoBugger.GeneralProgramClass;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NXP_OttoBugger
 {
-    public static class CanbusClass
+    public static class Class2
     {
-        public static string[] baudrates = { "125K", "250K", "500K", "1000K" };
+        public static string[] baudrates = { "125K", "250K", "500K" };
         public static PcanStatus result;
         public static PcanChannel channel = PcanChannel.Usb01;
         public static PcanMessage CanTXMessage = new PcanMessage();
@@ -27,15 +23,12 @@ namespace NXP_OttoBugger
         private static UInt16 BOOT_CCITT_KEY = 0xCEFA;
         private static byte[] BOOT_RECV_BYTE = new byte[8];
 
-        public static readonly byte[] START_BL_TX = Encoding.ASCII.GetBytes("!BOOTSTT");
-        public static readonly byte[] START_BL_RX = Encoding.ASCII.GetBytes("!BOOTSTD");
         private static readonly byte[] START_MSG_CFG = Encoding.ASCII.GetBytes("!CFGxxxx");
-        private static readonly byte[] WOKE_UP_FROM_APP = Encoding.ASCII.GetBytes("!WAKEAPP");
         private static readonly byte[] START_MSG_APP = Encoding.ASCII.GetBytes("!APPxxxx");
-        private static readonly byte[] APP_READY_MSG = Encoding.ASCII.GetBytes("!APPSTRT");
         private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!OTTOSTR");
         private static readonly byte[] NEXT_MSG = Encoding.ASCII.GetBytes("!OTTONXT");
         private static readonly byte[] END_MSG = Encoding.ASCII.GetBytes("!OTTOJMP");
+        private static readonly byte[] SKIP_MSG = Encoding.ASCII.GetBytes("!SKIPJUMP");
 
         public static bool CanConnect(PcanChannel PcanChannel, string BaudRate)
         {
@@ -86,139 +79,140 @@ namespace NXP_OttoBugger
             Api.Write(PcanChannel, CanTXMessage);
             return true;
         }
-
-        public static bool CanReceive(PcanChannel PcanChannel, uint ID, MessageType MSG_FRMT, uint DLC, byte[] data, uint timeoutMs)
+        public static bool CanReceive(PcanChannel PcanChannel, uint ID, MessageType MSG_FRMT, uint DLC, byte[] data)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
-            while (stopwatch.ElapsedMilliseconds < timeoutMs)
+        spawn:
+            Api.Read(PcanChannel, out CanRXMessage);
+            if (CanRXMessage.ID != ID || CanRXMessage.MsgType != MSG_FRMT || CanRXMessage.DLC != DLC) goto spawn;
+            for (int i = 0; i < 8; i++)
             {
-                if (Api.Read(PcanChannel, out CanRXMessage) == PcanStatus.OK)
-                {
-                    if (CanRXMessage.ID != ID || CanRXMessage.MsgType != MSG_FRMT || CanRXMessage.DLC != DLC)
-                        continue;
-
-                    int length = Math.Min(CanRXMessage.DLC, data.Length);
-                    Array.Copy(CanRXMessage.Data, data, length);
-                    return true;
-                }
-                //Thread.Sleep(1);
+                data[i] = CanRXMessage.Data[i];
             }
-            return false;
+            return true;
         }
-
-        public static bool CanBootloaderStart(PcanChannel PcanChannel, string filePath, ProgressBar pb, Button SW_UPD_BUTTON, Label TIME_LABEL, ref bool Kill_Thread_Status)
+        public static bool CanBootloaderStart(PcanChannel PcanChannel, string filePath, ProgressBar pb, Button SW_UPD_BUTTON, Label TIME_LABEL, bool Kill_Thread_Status)
         {
             try
             {
                 pb.Enabled = true;
-                SW_UPD_BUTTON.Text = "Software Update Started!";
+                SW_UPD_BUTTON.Text = "Software Updating";
                 SW_UPD_BUTTON.Enabled = false;
-                Thread.Sleep(100);
-                CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, WOKE_UP_FROM_APP);
-                if (WaitForMessage(PcanChannel, APP_READY_MSG, 5000) == CanMessageState.OK)
-                {
-                    SW_UPD_BUTTON.Text = "Woke Up From App";
-                }
-                Thread.Sleep(200);
                 switch (GeneralProgramClass.ModeForUpload)
                 {
                     case GeneralProgramClass.UploadMode.CONFIG:
                         {
-                            int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                            for (int indx = 0; indx < 4; indx++)
+                            while (true)
                             {
-                                START_MSG_CFG[indx + 4] = (byte)(0xFF & (unixTimestamp >> (24 - (8 * indx))));
+                                int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                                for (int indx = 0; indx < 4; indx++)
+                                {
+                                    START_MSG_CFG[indx + 4] = (byte)(0xFF & (unixTimestamp >> (24 - (8 * indx))));
+                                }
+                                CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, START_MSG_CFG);
+                                if (WaitForMessage(PcanChannel, READY_MSG))
+                                {
+                                    break;
+                                }
+                                if (Kill_Thread_Status)
+                                {
+                                    Kill_Thread_Status = false;
+                                    return false;
+                                }
                             }
-                            CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, START_MSG_CFG);
-                            if (WaitForMessage(PcanChannel, READY_MSG, 5000) != CanMessageState.OK)
-                            {
-                                return false;
-                            }
-                            SW_UPD_BUTTON.Text = "Software Update Mode : Config";
                             break;
                         }
                     case GeneralProgramClass.UploadMode.PROGRAM:
                         {
-                            int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                            for (int indx = 0; indx < 4; indx++)
+                            while (true)
                             {
-                                START_MSG_APP[indx + 4] = (byte)(0xFF & (unixTimestamp >> (24 - (8 * indx))));
+                                int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                                for (int indx = 0; indx < 4; indx++)
+                                {
+                                    START_MSG_APP[indx + 4] = (byte)(0xFF & (unixTimestamp >> (24 - (8 * indx))));
+                                }
+                                CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, START_MSG_APP);
+                                if (WaitForMessage(PcanChannel, READY_MSG))
+                                {
+                                    break;
+                                }
+                                if (Kill_Thread_Status)
+                                {
+                                    Kill_Thread_Status = false;
+                                    return false;
+                                }
                             }
-                            CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, START_MSG_APP);
-                            if (WaitForMessage(PcanChannel, READY_MSG, 5000) != CanMessageState.OK)
-                            {
-                                return false;
-                            }
-                            SW_UPD_BUTTON.Text = "Software Update Mode : Program";
                             break;
                         }
                 }
+
 
                 byte[][] fileChunks = ReadBinFile(filePath);
                 int totalChunks = fileChunks.Length;
 
                 for (int i = 0; i < totalChunks; i++)
                 {
-                    if (Kill_Thread_Status)
-                    {
-                        Kill_Thread_Status = false;
-                        return false;
-                    }
-
                     byte[] packet = fileChunks[i];
-                    CanTransmit(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, packet);
-
-                    if (WaitForMessage(PcanChannel, NEXT_MSG, 5000) != CanMessageState.OK)
+                    while (true)
                     {
-                        return false;
+                        CanTransmit(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, packet);
+                        if (WaitForMessage(PcanChannel, NEXT_MSG))
+                        {
+                            pb.Value += 4;
+                        }
+                        if (Kill_Thread_Status)
+                        {
+                            Kill_Thread_Status = false;
+                            return false;
+                        }
+                        break;
                     }
-
-                    pb.Value += 4;
-                    //SW_UPD_BUTTON.Text = pb.Value/4 + " / " + pb.Maximum/4 + "flashed!";
                 }
-                SW_UPD_BUTTON.Text = pb.Maximum / 4 + "flashed!";
-                Thread.Sleep(20);
-                SW_UPD_BUTTON.Text = "Software Update Done";
-                Thread.Sleep(20);
                 CanTransmit(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, END_MSG);
                 SW_UPD_BUTTON.Text = "Software Update Start";
                 SW_UPD_BUTTON.Enabled = true;
                 pb.Enabled = false;
                 pb.Value = 0;
-                MessageBox.Show("Software Update Successful!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (Kill_Thread_Status)
+                {
+                    Kill_Thread_Status = false;
+                    return false;
+                }
+                MessageBox.Show("Software Update Successfull!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
             catch
             {
+                SW_UPD_BUTTON.Text = "Software Update Start";
+                SW_UPD_BUTTON.Enabled = true;
+                pb.Enabled = false;
+                if (Kill_Thread_Status)
+                {
+                    Kill_Thread_Status = false;
+                    return false;
+                }
                 MessageBox.Show("Software Update Error!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            finally
+            /*finally
             {
-                pb.Value = 0;
-                pb.Enabled = false;
                 SW_UPD_BUTTON.Text = "Software Update Start";
                 SW_UPD_BUTTON.Enabled = true;
-                Kill_Thread_Status = false;
-            }
+            }*/
         }
-        public static CanMessageState WaitForMessage(PcanChannel PcanChannel, byte[] expectedMsg, uint Timeout)
+        private static bool WaitForMessage(PcanChannel PcanChannel, byte[] expectedMsg)
         {
-            if (!CanReceive(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, BOOT_RECV_BYTE, Timeout))
+            DateTime startTime = DateTime.Now;
+            while ((DateTime.Now - startTime).TotalMilliseconds < 2000)
             {
-                return CanMessageState.TIMEOUT;
+                CanReceive(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, BOOT_RECV_BYTE);
+                if (Compare(BOOT_RECV_BYTE, expectedMsg, 8))
+                {
+                    //MessageBox.Show($"ID : {CanRXMessage.ID}\nDATA0 : {CanRXMessage.Data[0]}\nDATA1 : {CanRXMessage.Data[1]}\nDATA2 : {CanRXMessage.Data[2]}\nDATA3 : {CanRXMessage.Data[3]}\nDATA4 : {CanRXMessage.Data[4]}\nDATA5 : {CanRXMessage.Data[5]}\nDATA6 : {CanRXMessage.Data[6]}\nDATA7 : {CanRXMessage.Data[7]}\n");
+                    return true;
+                }
             }
-            if (Compare(BOOT_RECV_BYTE, expectedMsg, 8))
-            {
-                return CanMessageState.OK;
-            }
-            else
-            {
-                return CanMessageState.ERROR;
-            }
+            return false;
         }
-
         private static byte[][] ReadBinFile(string filePath)
         {
             int DataIndexController = 0;
@@ -281,7 +275,7 @@ namespace NXP_OttoBugger
 
         private static bool Compare(byte[] Value_1, byte[] Value_2, uint Length)
         {
-            for(int i=0;i<Length;i++)
+            for (int i = 0; i < Length; i++)
             {
                 if (Value_1[i] != Value_2[i]) return false;
             }

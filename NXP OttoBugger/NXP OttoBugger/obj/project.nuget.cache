@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vi+EMEpYdNo=",
+  "dgSpecHash": "m9BxqCdpR3E=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ARGE13\\Documents\\Git\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXP OttoBugger.csproj",
+  "projectFilePath": "C:\\Users\\ARGE13\\Documents\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXP OttoBugger.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ARGE13\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\ARGE13\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
