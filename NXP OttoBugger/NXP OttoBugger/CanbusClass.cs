@@ -55,9 +55,9 @@ namespace NXP_OttoBugger
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (TypeInitializationException ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.InnerException?.Message ?? ex.Message,"Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -121,15 +121,15 @@ namespace NXP_OttoBugger
                     SW_UPD_BUTTON.Text = "Woke Up From App";
                 }
                 Thread.Sleep(200);
+                int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                for (int indx = 0; indx < 4; indx++)
+                {
+                    START_MSG_APP[indx + 4] = (byte)(0xFF & (unixTimestamp >> (24 - (8 * indx))));
+                }
                 switch (GeneralProgramClass.ModeForUpload)
                 {
                     case GeneralProgramClass.UploadMode.CONFIG:
                         {
-                            int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                            for (int indx = 0; indx < 4; indx++)
-                            {
-                                START_MSG_CFG[indx + 4] = (byte)(0xFF & (unixTimestamp >> (24 - (8 * indx))));
-                            }
                             CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, START_MSG_CFG);
                             if (WaitForMessage(PcanChannel, READY_MSG, 5000) != CanMessageState.OK)
                             {
@@ -140,11 +140,6 @@ namespace NXP_OttoBugger
                         }
                     case GeneralProgramClass.UploadMode.PROGRAM:
                         {
-                            int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                            for (int indx = 0; indx < 4; indx++)
-                            {
-                                START_MSG_APP[indx + 4] = (byte)(0xFF & (unixTimestamp >> (24 - (8 * indx))));
-                            }
                             CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, START_MSG_APP);
                             if (WaitForMessage(PcanChannel, READY_MSG, 5000) != CanMessageState.OK)
                             {
