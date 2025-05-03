@@ -1,4 +1,4 @@
-﻿namespace NXP_OttoBugger
+﻿namespace NXPBugger
 {
     partial class LoginPage
     {
@@ -96,6 +96,7 @@
             Name = "LoginPage";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "NXPBugger";
+            Load += LoginPage_Load;
             ResumeLayout(false);
             PerformLayout();
         }

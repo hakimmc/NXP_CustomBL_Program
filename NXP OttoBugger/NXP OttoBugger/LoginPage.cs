@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
     public partial class LoginPage : Form
     {
@@ -22,12 +22,17 @@ namespace NXP_OttoBugger
             this.DialogResult = DialogResult.Cancel;
             if (u.Text == "OttomotiveNXPAC")
             {
-                if(p.Text == "Ottomotive22*AC")
+                if (p.Text == "Ottomotive22*AC")
                 {
                     this.DialogResult = DialogResult.OK;
                 }
             }
             this.Close();
+        }
+
+        private void LoginPage_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

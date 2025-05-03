@@ -3,12 +3,12 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Security.Permissions;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
-    public partial class OttobuggerV3 : Form
+    public partial class NXPO : Form
     {
         bool testwindow = false;
-        public OttobuggerV3()
+        public NXPO()
         {
             InitializeComponent();
         }

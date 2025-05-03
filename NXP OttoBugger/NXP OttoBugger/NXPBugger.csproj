@@ -3,11 +3,15 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <RootNamespace>NXP_OttoBugger</RootNamespace>
+    <RootNamespace>NXPBugger</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="CanbusClass.cs~RF1567763.TMP" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Peak.PCANBasic.NET" Version="4.10.0.964" />

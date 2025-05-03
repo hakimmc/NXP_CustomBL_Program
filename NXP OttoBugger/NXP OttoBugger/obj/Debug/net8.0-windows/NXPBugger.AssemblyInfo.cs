@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("NXP OttoBugger")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("NXPBugger")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+96f0928ca2cc8833289bafdd93799ec516b24743")]
-[assembly: System.Reflection.AssemblyProductAttribute("NXP OttoBugger")]
-[assembly: System.Reflection.AssemblyTitleAttribute("NXP OttoBugger")]
+[assembly: System.Reflection.AssemblyProductAttribute("NXPBugger")]
+[assembly: System.Reflection.AssemblyTitleAttribute("NXPBugger")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]

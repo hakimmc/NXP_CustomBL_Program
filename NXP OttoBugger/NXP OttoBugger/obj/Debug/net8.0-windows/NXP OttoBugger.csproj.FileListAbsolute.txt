@@ -143,8 +143,6 @@ C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP 
 C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\bin\Debug\net8.0-windows\runtimes\unix\lib\net8.0\System.IO.Ports.dll
 C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.IO.Ports.dll
 C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP OttoBugger.csproj.AssemblyReference.cache
-C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP_OttoBugger.OttobuggerV3.resources
-C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP_OttoBugger.Properties.Resources.resources
 C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP OttoBugger.csproj.GenerateResource.cache
 C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP OttoBugger.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP OttoBugger.AssemblyInfoInputs.cache
@@ -157,9 +155,6 @@ C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP 
 C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP OttoBugger.pdb
 C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP OttoBugger.genruntimeconfig.cache
 C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\ref\NXP OttoBugger.dll
-C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP_OttoBugger.Config_Creator.resources
-C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP_OttoBugger.LoginPage.resources
-C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP_OttoBugger.Config_Reader.resources
 C:\Users\ARGE13\Documents\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\bin\Debug\net8.0-windows\NXP OttoBugger.exe
 C:\Users\ARGE13\Documents\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\bin\Debug\net8.0-windows\NXP OttoBugger.deps.json
 C:\Users\ARGE13\Documents\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\bin\Debug\net8.0-windows\NXP OttoBugger.runtimeconfig.json
@@ -203,3 +198,8 @@ C:\Users\ARGE13\Documents\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj
 C:\Users\ARGE13\Documents\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP OttoBugger.pdb
 C:\Users\ARGE13\Documents\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXP OttoBugger.genruntimeconfig.cache
 C:\Users\ARGE13\Documents\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\ref\NXP OttoBugger.dll
+C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXPBugger.Config_Creator.resources
+C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXPBugger.NXPO.resources
+C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXPBugger.Properties.Resources.resources
+C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXPBugger.LoginPage.resources
+C:\Users\acalg\OneDrive\Belgeler\GitHub\NXP_CustomBL_Program\NXP OttoBugger\NXP OttoBugger\obj\Debug\net8.0-windows\NXPBugger.Config_Reader.resources

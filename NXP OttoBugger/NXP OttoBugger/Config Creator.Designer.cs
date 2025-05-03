@@ -1,4 +1,4 @@
-﻿namespace NXP_OttoBugger
+﻿namespace NXPBugger
 {
     partial class Config_Creator
     {

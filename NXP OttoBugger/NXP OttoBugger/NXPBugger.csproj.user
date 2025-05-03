@@ -10,7 +10,7 @@
     <Compile Update="LoginPage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="OttobugerMain.cs">
+    <Compile Update="NXPbuggerMain.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

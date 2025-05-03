@@ -6321,9 +6321,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXP OttoBugger.csproj",
-      "projectName": "NXP OttoBugger",
-      "projectPath": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXP OttoBugger.csproj",
+      "projectUniqueName": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXPBugger.csproj",
+      "projectName": "NXPBugger",
+      "projectPath": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXPBugger.csproj",
       "packagesPath": "C:\\Users\\acalg\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\obj\\",
       "projectStyle": "PackageReference",

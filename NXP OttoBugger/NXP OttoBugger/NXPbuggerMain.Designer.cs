@@ -1,6 +1,6 @@
-﻿namespace NXP_OttoBugger
+﻿namespace NXPBugger
 {
-    partial class OttobuggerV3
+    partial class NXPO
     {
         /// <summary>
         ///  Required designer variable.

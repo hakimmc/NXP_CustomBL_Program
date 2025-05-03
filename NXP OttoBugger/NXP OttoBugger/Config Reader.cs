@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
     public partial class Config_Reader : Form
     {
@@ -33,43 +34,46 @@ namespace NXP_OttoBugger
             if (DialogResult.OK == ofd.ShowDialog())
             {
                 byte[] filebyte = File.ReadAllBytes(ofd.FileName);
-                long unixtime = filebyte[0] >> 24 + filebyte[1] >> 16 + filebyte[2] >> 8 + filebyte[3];
-                string date_unix = DateTimeOffset.FromUnixTimeSeconds(unixtime).LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
-                date.Text = date_unix;
+                UInt32 unixtime = 0;
+                for(int i = 0; i < 4; i++)
+                {
+                    unixtime += (Convert.ToUInt32(filebyte[i]) << (i*8));
+                }
+                date.Text = DateTimeOffset.FromUnixTimeSeconds(unixtime).LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
                 SYSTEMID.Value = filebyte[4];
                 MAJORVERSION.Value = filebyte[5];
                 MINORVERSION.Value = filebyte[6];
                 BUGFIXVERSION.Value = filebyte[7];
-                BootModeCB.SelectedIndex = filebyte[8] & 0x1;
-                BOOTTIMEOUT.Value = filebyte[8] & 0xFE;
-                CAN1_BAUD_CB.SelectedIndex = filebyte[9] & 0x3;
-                CAN2_BAUD_CB.SelectedIndex = (filebyte[9] & (0x3 << 2)) >> 2;
-                CAN3_BAUD_CB.SelectedIndex = (filebyte[9] & (0x3 << 4)) >> 4;
-                CAN4_BAUD_CB.SelectedIndex = (filebyte[9] & (0x3 << 6)) >> 6;
-                UARTBAUDCB.SelectedIndex = filebyte[10] & 0x1;
-                PRINTFDEBUGCB.SelectedIndex = filebyte[10] & 0x2;
-                companynum.Value = filebyte[10] & 0xFC;
-                usernamenum.Value = filebyte[11];
-                CELLCAPAH.Value = filebyte[12];
-                SERIESCELLCOUNT.Value = filebyte[13];
-                PARALLELCELLCOUNT.Value = filebyte[14];
-                DAISYCHAINCOUNT.Value = filebyte[15];
-                maxcellv.Text = (((uint)(filebyte[16]) << 8) + filebyte[17]).ToString();
-                mincellv.Text = (((uint)(filebyte[18]) << 8) + filebyte[19]).ToString();
-                tempsensorb.Text = (((uint)(filebyte[20]) << 8) + filebyte[21]).ToString();
-                defaultsoc.Value = filebyte[22];
-                defaultsoh.Value = filebyte[23];
-                maxtemp.Value = filebyte[24];
-                mintemp.Value = filebyte[25];
-                tempsensorcount.Value = filebyte[26];
-                //filebyte[27] released!
-                MAC_ADDR[0] = filebyte[28];
-                MAC_ADDR[1] = filebyte[29];
-                MAC_ADDR[2] = filebyte[30];
-                MAC_ADDR[3] = filebyte[31];
-                MAC_ADDR[4] = filebyte[32];
-                MAC_ADDR[5] = filebyte[33];
-                //filebyte[34] released!
+                //filebyte[8] released!
+                MAC_ADDR[0] = filebyte[9];
+                MAC_ADDR[1] = filebyte[10];
+                MAC_ADDR[2] = filebyte[11];
+                MAC_ADDR[3] = filebyte[12];
+                MAC_ADDR[4] = filebyte[13];
+                MAC_ADDR[5] = filebyte[14];
+                //filebyte[15] released!
+                BootModeCB.SelectedIndex = filebyte[16] & 0x1;
+                BOOTTIMEOUT.Value = filebyte[16] & 0xFE;
+                CAN1_BAUD_CB.SelectedIndex = filebyte[17] & 0x3;
+                CAN2_BAUD_CB.SelectedIndex = (filebyte[17] & (0x3 << 2)) >> 2;
+                CAN3_BAUD_CB.SelectedIndex = (filebyte[17] & (0x3 << 4)) >> 4;
+                CAN4_BAUD_CB.SelectedIndex = (filebyte[17] & (0x3 << 6)) >> 6;
+                UARTBAUDCB.SelectedIndex = filebyte[18] & 0x1;
+                PRINTFDEBUGCB.SelectedIndex = filebyte[18] & 0x2;
+                companynum.Value = filebyte[18] & 0xFC;
+                usernamenum.Value = filebyte[19];
+                CELLCAPAH.Value = filebyte[20];
+                SERIESCELLCOUNT.Value = filebyte[21];
+                PARALLELCELLCOUNT.Value = filebyte[22];
+                DAISYCHAINCOUNT.Value = filebyte[23];
+                maxcellv.Text = (((uint)(filebyte[25]) << 8) + filebyte[24]).ToString();
+                mincellv.Text = (((uint)(filebyte[27]) << 8) + filebyte[26]).ToString();
+                tempsensorb.Text = (((uint)(filebyte[29]) << 8) + filebyte[28]).ToString();
+                defaultsoc.Value = filebyte[30];
+                defaultsoh.Value = filebyte[31];
+                maxtemp.Value = filebyte[32];
+                mintemp.Value = filebyte[33];
+                tempsensorcount.Value = filebyte[34];
                 //filebyte[35] released!
                 //filebyte[36] '!'
                 //filebyte[37] 'C'

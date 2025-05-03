@@ -11,7 +11,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
     public partial class Config_Creator : Form
     {
@@ -205,6 +205,15 @@ namespace NXP_OttoBugger
                 (byte)(MAJORVERSION.Value), //0x450005 - 0x450006 1BYTE
                 (byte)(MINORVERSION.Value), //0x450006 - 0x450007 1BYTE
                 (byte)(BUGFIXVERSION.Value), //0x450007 - 0x450008 1BYTE
+                //MAC ADDRESS
+                (byte)(0xFF), // released
+                MAC_ADDR[0],
+                MAC_ADDR[1],
+                MAC_ADDR[2],
+                MAC_ADDR[3],
+                MAC_ADDR[4],
+                MAC_ADDR[5],
+                (byte)(0xFF),
                 //BOOT SETTINGS
                 (byte)(BootModeCB.SelectedIndex + ((uint)(BOOTTIMEOUT.Value)<<1)),
                 //CAN SETTINGS
@@ -232,15 +241,7 @@ namespace NXP_OttoBugger
                 (byte)(maxtemp.Value),
                 (byte)(mintemp.Value),
                 (byte)(tempsensorcount.Value),
-                (byte)(0xFF), // released
-                //MAC ADDRESS
-                MAC_ADDR[0],
-                MAC_ADDR[1],
-                MAC_ADDR[2],
-                MAC_ADDR[3],
-                MAC_ADDR[4],
-                MAC_ADDR[5],
-                (byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF), // padding bytes
+                (byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF), // padding bytes
                 (byte)('!'),(byte)('C'),(byte)('F'),(byte)('G'),
                 (byte)'E',(byte)'O',(byte)'C',(byte)';'
             };
