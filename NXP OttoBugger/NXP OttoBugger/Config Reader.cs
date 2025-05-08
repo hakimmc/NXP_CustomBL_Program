@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Peak.Can.Basic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,8 +9,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static NXPBugger.GeneralProgramClass;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
     public partial class Config_Reader : Form
     {
@@ -20,11 +22,6 @@ namespace NXP_OttoBugger
 
         private void SelectCfgFromStorage_Click(object sender, EventArgs e)
         {
-            ReadAndReplaceConfigFile();
-        }
-
-        public void ReadAndReplaceConfigFile()
-        {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "Select Config File For Show Configuration";
             ofd.Filter = "Config File |*.cfg";
@@ -33,58 +30,63 @@ namespace NXP_OttoBugger
             if (DialogResult.OK == ofd.ShowDialog())
             {
                 byte[] filebyte = File.ReadAllBytes(ofd.FileName);
-                long unixtime = filebyte[0] >> 24 + filebyte[1] >> 16 + filebyte[2] >> 8 + filebyte[3];
-                string date_unix = DateTimeOffset.FromUnixTimeSeconds(unixtime).LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
-                date.Text = date_unix;
-                SYSTEMID.Value = filebyte[4];
-                MAJORVERSION.Value = filebyte[5];
-                MINORVERSION.Value = filebyte[6];
-                BUGFIXVERSION.Value = filebyte[7];
-                BootModeCB.SelectedIndex = filebyte[8] & 0x1;
-                BOOTTIMEOUT.Value = filebyte[8] & 0xFE;
-                CAN1_BAUD_CB.SelectedIndex = filebyte[9] & 0x3;
-                CAN2_BAUD_CB.SelectedIndex = (filebyte[9] & (0x3 << 2)) >> 2;
-                CAN3_BAUD_CB.SelectedIndex = (filebyte[9] & (0x3 << 4)) >> 4;
-                CAN4_BAUD_CB.SelectedIndex = (filebyte[9] & (0x3 << 6)) >> 6;
-                UARTBAUDCB.SelectedIndex = filebyte[10] & 0x1;
-                PRINTFDEBUGCB.SelectedIndex = filebyte[10] & 0x2;
-                companynum.Value = filebyte[10] & 0xFC;
-                usernamenum.Value = filebyte[11];
-                CELLCAPAH.Value = filebyte[12];
-                SERIESCELLCOUNT.Value = filebyte[13];
-                PARALLELCELLCOUNT.Value = filebyte[14];
-                DAISYCHAINCOUNT.Value = filebyte[15];
-                maxcellv.Text = (((uint)(filebyte[16]) << 8) + filebyte[17]).ToString();
-                mincellv.Text = (((uint)(filebyte[18]) << 8) + filebyte[19]).ToString();
-                tempsensorb.Text = (((uint)(filebyte[20]) << 8) + filebyte[21]).ToString();
-                defaultsoc.Value = filebyte[22];
-                defaultsoh.Value = filebyte[23];
-                maxtemp.Value = filebyte[24];
-                mintemp.Value = filebyte[25];
-                tempsensorcount.Value = filebyte[26];
-                //filebyte[27] released!
-                MAC_ADDR[0] = filebyte[28];
-                MAC_ADDR[1] = filebyte[29];
-                MAC_ADDR[2] = filebyte[30];
-                MAC_ADDR[3] = filebyte[31];
-                MAC_ADDR[4] = filebyte[32];
-                MAC_ADDR[5] = filebyte[33];
-                //filebyte[34] released!
-                //filebyte[35] released!
-                //filebyte[36] '!'
-                //filebyte[37] 'C'
-                //filebyte[38] 'F'
-                //filebyte[39] 'G'
-                //filebyte[40] 'S'
-                //filebyte[41] 'K'
-                //filebyte[42] 'I'
-                //filebyte[43] 'P'
-                macaddresstext.Text = "MAC : " + BitConverter.ToString(MAC_ADDR).Replace("-", ":");
+                ReadAndReplaceConfigFile(filebyte);
             }
-            else
+        }
+
+        public void ReadAndReplaceConfigFile(byte[] cfgfilebyte)
+        {
+            UInt32 unixtime = 0;
+            for (int i = 0; i < 4; i++)
             {
-                return;
+                unixtime += (Convert.ToUInt32(cfgfilebyte[i]) << (i * 8));
             }
+            date.Text = DateTimeOffset.FromUnixTimeSeconds(unixtime).LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            SYSTEMID.Value = cfgfilebyte[4];
+            MAJORVERSION.Value = cfgfilebyte[5];
+            MINORVERSION.Value = cfgfilebyte[6];
+            BUGFIXVERSION.Value = cfgfilebyte[7];
+            //cfgfilebyte[8] released!
+            MAC_ADDR[0] = cfgfilebyte[9];
+            MAC_ADDR[1] = cfgfilebyte[10];
+            MAC_ADDR[2] = cfgfilebyte[11];
+            MAC_ADDR[3] = cfgfilebyte[12];
+            MAC_ADDR[4] = cfgfilebyte[13];
+            MAC_ADDR[5] = cfgfilebyte[14];
+            //cfgfilebyte[15] released!
+            BootModeCB.SelectedIndex = cfgfilebyte[16] & 0x1;
+            BOOTTIMEOUT.Value = (cfgfilebyte[16] & 0xFE)>>1;
+            CAN1_BAUD_CB.SelectedIndex = cfgfilebyte[17] & 0x3;
+            CAN2_BAUD_CB.SelectedIndex = (cfgfilebyte[17] & (0x3 << 2)) >> 2;
+            CAN3_BAUD_CB.SelectedIndex = (cfgfilebyte[17] & (0x3 << 4)) >> 4;
+            CAN4_BAUD_CB.SelectedIndex = (cfgfilebyte[17] & (0x3 << 6)) >> 6;
+            UARTBAUDCB.SelectedIndex = cfgfilebyte[18] & 0x1;
+            PRINTFDEBUGCB.SelectedIndex = (cfgfilebyte[18] & 0x2)>>1;
+            companynum.Value = (cfgfilebyte[18] & 0xFC)>>2;
+            usernamenum.Value = (cfgfilebyte[19]);
+            CELLCAPAH.Value = cfgfilebyte[20];
+            SERIESCELLCOUNT.Value = cfgfilebyte[21];
+            PARALLELCELLCOUNT.Value = cfgfilebyte[22];
+            DAISYCHAINCOUNT.Value = cfgfilebyte[23];
+            maxcellv.Text = (((uint)(cfgfilebyte[25]) << 8) + cfgfilebyte[24]).ToString();
+            mincellv.Text = (((uint)(cfgfilebyte[27]) << 8) + cfgfilebyte[26]).ToString();
+            tempsensorb.Text = (((uint)(cfgfilebyte[29]) << 8) + cfgfilebyte[28]).ToString();
+            defaultsoc.Value = cfgfilebyte[30]>100?100: cfgfilebyte[30];
+            defaultsoh.Value = cfgfilebyte[31] > 100 ? 100 : cfgfilebyte[31];
+            maxtemp.Value = cfgfilebyte[32];
+            mintemp.Value = cfgfilebyte[33];
+            tempsensorcount.Value = cfgfilebyte[34];
+            //cfgfilebyte[35] released!
+            //cfgfilebyte[36] '!'
+            //cfgfilebyte[37] 'C'
+            //cfgfilebyte[38] 'F'
+            //cfgfilebyte[39] 'G'
+            //cfgfilebyte[40] 'S'
+            //cfgfilebyte[41] 'K'
+            //cfgfilebyte[42] 'I'
+            //cfgfilebyte[43] 'P'
+            macaddresstext.Text = "MAC : " + BitConverter.ToString(MAC_ADDR).Replace("-", ":");
+            MessageBox.Show("Config Read Success!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public byte[] MAC_ADDR = new byte[6];
@@ -103,6 +105,15 @@ namespace NXP_OttoBugger
                 (byte)(MAJORVERSION.Value), //0x450005 - 0x450006 1BYTE
                 (byte)(MINORVERSION.Value), //0x450006 - 0x450007 1BYTE
                 (byte)(BUGFIXVERSION.Value), //0x450007 - 0x450008 1BYTE
+                //MAC ADDRESS
+                (byte)(0xFF), // released
+                MAC_ADDR[0],
+                MAC_ADDR[1],
+                MAC_ADDR[2],
+                MAC_ADDR[3],
+                MAC_ADDR[4],
+                MAC_ADDR[5],
+                (byte)(0xFF),
                 //BOOT SETTINGS
                 (byte)(BootModeCB.SelectedIndex + ((uint)(BOOTTIMEOUT.Value)<<1)),
                 //CAN SETTINGS
@@ -130,18 +141,11 @@ namespace NXP_OttoBugger
                 (byte)(maxtemp.Value),
                 (byte)(mintemp.Value),
                 (byte)(tempsensorcount.Value),
-                (byte)(0xFF), // released
-                //MAC ADDRESS
-                MAC_ADDR[0],
-                MAC_ADDR[1],
-                MAC_ADDR[2],
-                MAC_ADDR[3],
-                MAC_ADDR[4],
-                MAC_ADDR[5],
-                (byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF), // padding bytes
+                (byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF),(byte)(0xFF), // padding bytes
                 (byte)('!'),(byte)('C'),(byte)('F'),(byte)('G'),
                 (byte)'E',(byte)'O',(byte)'C',(byte)';'
             };
+            MessageBox.Show("Config Write Success!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return bytes;
         }
 
@@ -170,12 +174,41 @@ namespace NXP_OttoBugger
 
         private void Config_Reader_FormClosing(object sender, FormClosingEventArgs e)
         {
-            GeneralProgramClass.FormActive_CFG_Creator = false;
+            GeneralProgramClass.FormActive_CFG_Reader = false;
         }
 
+        public static readonly byte[] READ_CFG_COMMAND_TX = Encoding.ASCII.GetBytes("READCFG0");
+        public static readonly byte[] READ_CFG_COMMAND_RX = Encoding.ASCII.GetBytes("!CFGWRGT");
         private void ReadCfgFromDevice_Click(object sender, EventArgs e)
         {
-
+            READ_CFG_COMMAND_TX[7] = (byte)(0);
+            CanbusClass.CanTransmit(CanbusClass.channel, CanbusClass.BOOT_WAKE_ID, CanbusClass.BOOT_MSGTYP, CanbusClass.BOOT_DLC, READ_CFG_COMMAND_TX);
+            /*if (CanbusClass.WaitForMessage(CanbusClass.channel, READ_CFG_COMMAND_RX, 5000) == CanMessageState.OK)
+            {*/
+                byte[] temp_cfg_array = new byte[8];
+                byte[] cfg_array = new byte[48];
+                for(int i = 0; i < 6; i++)
+                {
+                    Thread.Sleep(100);
+                    if (!CanbusClass.CanReceive(CanbusClass.channel, CanbusClass.BOOT_ID, CanbusClass.BOOT_MSGTYP, CanbusClass.BOOT_DLC, temp_cfg_array, 5000))
+                    {
+                        MessageBox.Show("Timeout error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    MessageBox.Show(Encoding.UTF8.GetString(temp_cfg_array));
+                    for(int j=0; j<8; j++)
+                    {
+                        cfg_array[(i*8)+j] = temp_cfg_array[j];
+                    }
+                    READ_CFG_COMMAND_TX[7] = (byte)(i+1);
+                    CanbusClass.CanTransmit(CanbusClass.channel, CanbusClass.BOOT_WAKE_ID, CanbusClass.BOOT_MSGTYP, CanbusClass.BOOT_DLC, READ_CFG_COMMAND_TX);
+                }
+                ReadAndReplaceConfigFile(cfg_array);
+            /*}
+            else
+            {
+                MessageBox.Show("Timeout error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }*/
         }
         private void SaveOutputCfgFile_Click(object sender, EventArgs e)
         {
@@ -195,6 +228,11 @@ namespace NXP_OttoBugger
             {
                 return;
             }
+        }
+
+        private void Config_Reader_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GeneralProgramClass.FormActive_CFG_Creator = false;
         }
     }
 }

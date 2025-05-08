@@ -2,13 +2,14 @@ using Peak.Can.Basic;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Security.Permissions;
+using static NXPBugger.GeneralProgramClass;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
-    public partial class OttobuggerV3 : Form
+    public partial class NXPBuggerv1 : Form
     {
         bool testwindow = false;
-        public OttobuggerV3()
+        public NXPBuggerv1()
         {
             InitializeComponent();
         }
@@ -97,7 +98,7 @@ namespace NXP_OttoBugger
 
         }
         string file = "set.csv";
-        private void OttobuggerV3_Load(object sender, EventArgs e)
+        private void NXPBuggerv1_Load(object sender, EventArgs e)
         {
             Control.CheckForIllegalCrossThreadCalls = false;
             Sw_UpdateStartButton.Enabled = false;
@@ -145,7 +146,7 @@ namespace NXP_OttoBugger
                 OpenTest_Window_Button.Text = "Close Side Window";
             }
         }
-        private void OttobuggerV3_FormClosing(object sender, FormClosingEventArgs e)
+        private void NXPBuggerv1_FormClosing(object sender, FormClosingEventArgs e)
         {
             KILL_SW_UPD_TH = true;
             while (!KILL_SW_UPD_TH)
@@ -216,8 +217,10 @@ namespace NXP_OttoBugger
             }
 
         }
-        private void ConnectButton_Click(object sender, EventArgs e)
+
+        void Connect_Action()
         {
+            //connect_click_state = false;
             if (ConnectButton.Text == "Connect to Device")
             {
                 //uart
@@ -239,31 +242,56 @@ namespace NXP_OttoBugger
                 else
                 {
                     string selectedText = UartComportCombobox.SelectedItem.ToString();
+                    COMM_MODE_GB.Enabled = false;
+                    BAUD_GB.Enabled = false;
+                    UART_COM_GB.Enabled = false;
+                    SW_UPD_GB.Enabled = false;
+                    TEST_GB.Enabled = false;
+                    UART_TEST_GB.Enabled = false;
+                    CAN_TEST_GB.Enabled = false;
                     if (Enum.TryParse(selectedText, out PcanChannel selectedChannel))
                     {
                         CanbusClass.channel = selectedChannel;
-                        //ushort channelValue = (ushort)selectedChannel;
-                        //MessageBox.Show($"Selected Channel: {selectedChannel} ({channelValue})");
                     }
                     if (CanbusClass.CanConnect(CanbusClass.channel, BaudCombobox.Text))
                     {
-                        CanbusClass.IsCanOpen = true;
-                        ConnectButton.Text = "Disconnect from Device";
-                        COMM_MODE_GB.Enabled = false;
-                        BAUD_GB.Enabled = false;
-                        UART_COM_GB.Enabled = false;
-                        SW_UPD_GB.Enabled = true;
-                        SW_UPD_GB.Enabled = true;
-                        TEST_GB.Enabled = true;
-                        UART_TEST_GB.Enabled = false;
-                        CAN_TEST_GB.Enabled = true;
                         CanbusClass.BOOT_ID = 0x5166 + (uint)SYSTEMID.Value;
                         CanbusClass.BOOT_WAKE_ID = 0x5165 + (uint)SYSTEMID.Value;
-                        /*CanbusClass.CanTransmit(CanbusClass.channel, CanbusClass.BOOT_WAKE_ID, CanbusClass.BOOT_MSGTYP, CanbusClass.BOOT_DLC, CanbusClass.START_BL_TX);
-                        if (CanbusClass.WaitForMessage(CanbusClass.channel, CanbusClass.START_BL_RX))
+                        ConnectButton.Text = "Trying to Connect Device";
+                        Thread.Sleep(100);
+                        CanbusClass.CanTransmit(CanbusClass.channel, CanbusClass.BOOT_WAKE_ID, CanbusClass.BOOT_MSGTYP, CanbusClass.BOOT_DLC, CanbusClass.START_BL_TX);
+                        if (CanbusClass.WaitForMessage(CanbusClass.channel, CanbusClass.START_BL_RX, 1000) == CanMessageState.OK)
                         {
-                            MessageBox.Show("Device In Boot Mode!","Info",MessageBoxButtons.OK,MessageBoxIcon.Information);
-                        }*/
+                            /*if(connect_click_state)
+                            {
+                                return;
+                            }*/
+                            ConnectButton.Text = "Disconnect from Device";
+                            CanbusClass.IsCanOpen = true;
+                            COMM_MODE_GB.Enabled = false;
+                            BAUD_GB.Enabled = false;
+                            UART_COM_GB.Enabled = false;
+                            SW_UPD_GB.Enabled = true;
+                            TEST_GB.Enabled = true;
+                            UART_TEST_GB.Enabled = true;
+                            CAN_TEST_GB.Enabled = true;
+                            MessageBox.Show("Bootmode Activated!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            if (CanbusClass.CanDisconnect(CanbusClass.channel))
+                            {
+                                CanbusClass.IsCanOpen = false;
+                                ConnectButton.Text = "Connect to Device";
+                                COMM_MODE_GB.Enabled = true;
+                                BAUD_GB.Enabled = true;
+                                UART_COM_GB.Enabled = true          ;
+                                SW_UPD_GB.Enabled = false;
+                                TEST_GB.Enabled = false;
+                                UART_TEST_GB.Enabled = false;
+                                CAN_TEST_GB.Enabled = false;
+                            }
+                        }
                     }
                 }
             }
@@ -293,7 +321,7 @@ namespace NXP_OttoBugger
                         ConnectButton.Text = "Connect to Device";
                         COMM_MODE_GB.Enabled = true;
                         BAUD_GB.Enabled = true;
-                        UART_COM_GB.Enabled = false;
+                        UART_COM_GB.Enabled = true;
                         SW_UPD_GB.Enabled = false;
                         TEST_GB.Enabled = false;
                         UART_TEST_GB.Enabled = false;
@@ -301,9 +329,16 @@ namespace NXP_OttoBugger
                     }
                 }
             }
-
         }
-        private void OttobuggerV3_MouseDoubleClick(object sender, MouseEventArgs e)
+        Thread TH_CONNECT;
+        bool connect_click_state = false;
+        private void ConnectButton_Click(object sender, EventArgs e)
+        {
+            //connect_click_state = true;
+            TH_CONNECT = new Thread(Connect_Action);
+            TH_CONNECT.Start();
+        }
+        private void NXPBuggerv1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             DoubleClickCounter++;
             if (DoubleClickCounter > 1)

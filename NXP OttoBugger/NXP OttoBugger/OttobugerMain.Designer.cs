@@ -1,6 +1,6 @@
-﻿namespace NXP_OttoBugger
+﻿namespace NXPBugger
 {
-    partial class OttobuggerV3
+    partial class NXPBuggerv1
     {
         /// <summary>
         ///  Required designer variable.
@@ -712,7 +712,7 @@
             label1.TabIndex = 12;
             label1.Text = "SYSTEM ID :";
             // 
-            // OttobuggerV3
+            // NXPBuggerv1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -724,12 +724,12 @@
             Controls.Add(CFG_GB);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
-            Name = "OttobuggerV3";
+            Name = "NXPBuggerv1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "NXPBugger";
-            FormClosing += OttobuggerV3_FormClosing;
-            Load += OttobuggerV3_Load;
-            MouseDoubleClick += OttobuggerV3_MouseDoubleClick;
+            FormClosing += NXPBuggerv1_FormClosing;
+            Load += NXPBuggerv1_Load;
+            MouseDoubleClick += NXPBuggerv1_MouseDoubleClick;
             COMM_MODE_GB.ResumeLayout(false);
             COMM_MODE_GB.PerformLayout();
             BAUD_GB.ResumeLayout(false);

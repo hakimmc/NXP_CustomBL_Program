@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NXP OttoBugger")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0536ad3a70709d3a8dbbd71c651d3edfee691c6b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+180b5789d19012159f804f7ec34decf33edf62ef")]
 [assembly: System.Reflection.AssemblyProductAttribute("NXP OttoBugger")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NXP OttoBugger")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

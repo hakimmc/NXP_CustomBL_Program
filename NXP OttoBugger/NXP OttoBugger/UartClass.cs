@@ -1,9 +1,9 @@
 ﻿using Peak.Can.Basic;
 using System.IO.Ports;
 using System.Text;
-using static NXP_OttoBugger.GeneralProgramClass;
+using static NXPBugger.GeneralProgramClass;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
     public static class UartClass
     {

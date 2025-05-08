@@ -6,10 +6,10 @@ using System.IO.Ports;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
-using static NXP_OttoBugger.GeneralProgramClass;
+using static NXPBugger.GeneralProgramClass;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
     public static class CanbusClass
     {
@@ -30,9 +30,9 @@ namespace NXP_OttoBugger
         public static readonly byte[] START_BL_TX = Encoding.ASCII.GetBytes("!BOOTSTT");
         public static readonly byte[] START_BL_RX = Encoding.ASCII.GetBytes("!BOOTSTD");
         private static readonly byte[] START_MSG_CFG = Encoding.ASCII.GetBytes("!CFGxxxx");
-        private static readonly byte[] WOKE_UP_FROM_APP = Encoding.ASCII.GetBytes("!WAKEAPP");
+        //public static readonly byte[] WOKE_UP_FROM_APP = Encoding.ASCII.GetBytes("!WAKEAPP");
         private static readonly byte[] START_MSG_APP = Encoding.ASCII.GetBytes("!APPxxxx");
-        private static readonly byte[] APP_READY_MSG = Encoding.ASCII.GetBytes("!APPSTRT");
+        // static readonly byte[] APP_READY_MSG = Encoding.ASCII.GetBytes("!APPSTRT");
         private static readonly byte[] READY_MSG = Encoding.ASCII.GetBytes("!OTTOSTR");
         private static readonly byte[] NEXT_MSG = Encoding.ASCII.GetBytes("!OTTONXT");
         private static readonly byte[] END_MSG = Encoding.ASCII.GetBytes("!OTTOJMP");
@@ -114,13 +114,6 @@ namespace NXP_OttoBugger
                 pb.Enabled = true;
                 SW_UPD_BUTTON.Text = "Software Update Started!";
                 SW_UPD_BUTTON.Enabled = false;
-                Thread.Sleep(100);
-                CanTransmit(PcanChannel, BOOT_WAKE_ID, BOOT_MSGTYP, BOOT_DLC, WOKE_UP_FROM_APP);
-                if (WaitForMessage(PcanChannel, APP_READY_MSG, 5000) == CanMessageState.OK)
-                {
-                    SW_UPD_BUTTON.Text = "Woke Up From App";
-                }
-                Thread.Sleep(200);
                 switch (GeneralProgramClass.ModeForUpload)
                 {
                     case GeneralProgramClass.UploadMode.CONFIG:

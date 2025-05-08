@@ -1,4 +1,4 @@
-﻿namespace NXP_OttoBugger
+﻿namespace NXPBugger
 {
     partial class Config_Reader
     {
@@ -482,7 +482,6 @@
             // 
             BOOTTIMEOUT.Location = new Point(95, 66);
             BOOTTIMEOUT.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
-            BOOTTIMEOUT.Minimum = new decimal(new int[] { 2, 0, 0, 0 });
             BOOTTIMEOUT.Name = "BOOTTIMEOUT";
             BOOTTIMEOUT.Size = new Size(99, 23);
             BOOTTIMEOUT.TabIndex = 2;
@@ -781,6 +780,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Config Reader";
             FormClosing += Config_Reader_FormClosing;
+            FormClosed += Config_Reader_FormClosed;
             Load += Config_Reader_Load;
             groupBox5.ResumeLayout(false);
             groupBox5.PerformLayout();

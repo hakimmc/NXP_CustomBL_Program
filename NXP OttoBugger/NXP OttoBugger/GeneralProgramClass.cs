@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
     
     public static class GeneralProgramClass
@@ -33,7 +33,7 @@ namespace NXP_OttoBugger
         public static UploadMode ModeForUpload;
         public static bool READCFG = false;
         public static string DefaultFileLocation;
-        public static bool FormActive_CFG_Creator = false;
+        public static volatile bool FormActive_CFG_Creator = false;
         public static bool FormActive_CFG_Reader = false;
     }
 }

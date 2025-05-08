@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NXP_OttoBugger
+namespace NXPBugger
 {
     public partial class LoginPage : Form
     {
