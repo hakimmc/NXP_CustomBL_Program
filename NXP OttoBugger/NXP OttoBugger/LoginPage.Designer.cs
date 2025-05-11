@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginPage));
             u = new TextBox();
             label1 = new Label();
             p = new TextBox();
@@ -91,11 +92,12 @@
             Controls.Add(label1);
             Controls.Add(u);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "LoginPage";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "NXPBugger";
+            Text = "NXPLogin";
             ResumeLayout(false);
             PerformLayout();
         }

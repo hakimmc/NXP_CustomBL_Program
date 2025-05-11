@@ -87,7 +87,24 @@ namespace NXPBugger
             return true;
         }
 
-        public static bool CanReceive(PcanChannel PcanChannel, uint ID, MessageType MSG_FRMT, uint DLC, byte[] data, uint timeoutMs)
+        public static void CanReplace(PcanMessage CANMSG, TextBox CAN_ID, TextBox CAN_DLC,
+                              TextBox CAN_D1, TextBox CAN_D2, TextBox CAN_D3, TextBox CAN_D4,
+                              TextBox CAN_D5, TextBox CAN_D6, TextBox CAN_D7, TextBox CAN_D8)
+        {
+            CAN_ID.Text = CANMSG.ID.ToString("X");
+            CAN_DLC.Text = CANMSG.DLC.ToString();
+
+            CAN_D1.Text = CANMSG.Data[0].ToString("X2");
+            CAN_D2.Text = CANMSG.Data[1].ToString("X2");
+            CAN_D3.Text = CANMSG.Data[2].ToString("X2");
+            CAN_D4.Text = CANMSG.Data[3].ToString("X2");
+            CAN_D5.Text = CANMSG.Data[4].ToString("X2");
+            CAN_D6.Text = CANMSG.Data[5].ToString("X2");
+            CAN_D7.Text = CANMSG.Data[6].ToString("X2");
+            CAN_D8.Text = CANMSG.Data[7].ToString("X2");
+        }
+
+        public static bool CanReceive(PcanChannel PcanChannel, uint ID, MessageType MSG_FRMT, uint DLC, byte[] data, uint timeoutMs=0, bool InfiniteLoop = false)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -95,6 +112,7 @@ namespace NXPBugger
             {
                 if (Api.Read(PcanChannel, out CanRXMessage) == PcanStatus.OK)
                 {
+                    if(InfiniteLoop) CanReplace(CanRXMessage, NXPBuggerv1.CanDatasRXID, NXPBuggerv1.CanDatasRXDLC, NXPBuggerv1.CanDatasRXD1, NXPBuggerv1.CanDatasRXD2, NXPBuggerv1.CanDatasRXD3, NXPBuggerv1.CanDatasRXD4, NXPBuggerv1.CanDatasRXD5, NXPBuggerv1.CanDatasRXD6, NXPBuggerv1.CanDatasRXD7, NXPBuggerv1.CanDatasRXD8);
                     if (CanRXMessage.ID != ID || CanRXMessage.MsgType != MSG_FRMT || CanRXMessage.DLC != DLC)
                         continue;
 
@@ -198,7 +216,7 @@ namespace NXPBugger
         }
         public static CanMessageState WaitForMessage(PcanChannel PcanChannel, byte[] expectedMsg, uint Timeout)
         {
-            if (!CanReceive(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, BOOT_RECV_BYTE, Timeout))
+            if (!CanReceive(PcanChannel, BOOT_ID, BOOT_MSGTYP, BOOT_DLC, BOOT_RECV_BYTE, Timeout, true))
             {
                 return CanMessageState.TIMEOUT;
             }

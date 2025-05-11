@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Config_Reader));
             groupBox5 = new GroupBox();
             usernamenum = new NumericUpDown();
             usernamenumlabel = new Label();
@@ -776,9 +777,10 @@
             Controls.Add(groupBox3);
             Controls.Add(SaveOutputCfgFile);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Config_Reader";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Config Reader";
+            Text = "NXPReader";
             FormClosing += Config_Reader_FormClosing;
             FormClosed += Config_Reader_FormClosed;
             Load += Config_Reader_Load;

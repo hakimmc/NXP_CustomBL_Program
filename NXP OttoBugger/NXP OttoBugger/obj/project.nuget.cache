@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "M388nxO9DZs/TebOgQ4p6goQZeyoHWZOZSCT/AFniURDvH04eVCGp46HS6apEhuI95vm2KC1RUhAQ/8BIzxFjw==",
+  "dgSpecHash": "LD5AgLkCY9jV0sWoC6huP/zo+r0jOl9QmczjmAijotU8QGK6677OeFHScSbCbKzSAZbZCK19oDF5NFs2s1SO1g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\acalg\\OneDrive\\Belgeler\\xxxx\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXPBugger.csproj",
+  "projectFilePath": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\NXP_CustomBL_Program\\NXP OttoBugger\\NXP OttoBugger\\NXPBugger.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\acalg\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\acalg\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",

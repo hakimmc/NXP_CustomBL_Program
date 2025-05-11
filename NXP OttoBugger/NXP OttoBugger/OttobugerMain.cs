@@ -27,8 +27,8 @@ namespace NXPBugger
             }
             else if (CanRadio.Checked)
             {
-                CanbusClass.BOOT_ID = 0x5166 + (uint)SYSTEMID.Value;
-                CanbusClass.BOOT_WAKE_ID = 0x5165 + (uint)SYSTEMID.Value;
+                CanbusClass.BOOT_ID = 0x5166 + Convert.ToUInt32(SYSTEMIDv2.Text);
+                CanbusClass.BOOT_WAKE_ID = 0x5165 + Convert.ToUInt32(SYSTEMIDv2.Text);
                 CanbusClass.CanBootloaderStart(CanbusClass.channel, GeneralProgramClass.DefaultFileLocation, SwUpdate_ProgressBar, Sw_UpdateStartButton, Sw_DuringTimeLabel, ref KILL_SW_UPD_TH);
             }
         }
@@ -96,6 +96,7 @@ namespace NXPBugger
             UartDatasTX.Text = data[24];
             UartDatasRX.Text = data[25];
 
+            SYSTEMIDv2.Text = data[26];
         }
         string file = "set.csv";
         private void NXPBuggerv1_Load(object sender, EventArgs e)
@@ -116,7 +117,7 @@ namespace NXPBugger
                     fs.Close();
                     using (StreamWriter writer = new StreamWriter(file))
                     {
-                        writer.Write("CAN,125K,COM7,C:/,20000000,8,1,2,3,4,5,6,7,8,20000000,8,9,A,B,C,D,E,F,G,UARTTX,UARTRX");
+                        writer.Write("CAN,500K,Usb01,C:/,10000000,8,1,2,3,4,5,6,7,8,10000000,8,9,A,B,C,D,E,F,G,UARTTX,UARTRX,0");
                     }
                 }
                 using (StreamReader reader = new StreamReader(file))
@@ -189,7 +190,9 @@ namespace NXPBugger
                     $"{CanDatasRXD7.Text}," +
                     $"{CanDatasRXD8.Text}," +
                     $"{UartDatasTX.Text}," +
-                    $"{UartDatasRX.Text}");
+                    $"{UartDatasRX.Text}," +
+                    $"{SYSTEMIDv2.Text}"
+                    );
             }
         }
         private void UartRadio_CheckedChanged(object sender, EventArgs e)
@@ -217,7 +220,7 @@ namespace NXPBugger
             }
 
         }
-
+        Thread InfCanTask;
         void Connect_Action()
         {
             //connect_click_state = false;
@@ -255,8 +258,8 @@ namespace NXPBugger
                     }
                     if (CanbusClass.CanConnect(CanbusClass.channel, BaudCombobox.Text))
                     {
-                        CanbusClass.BOOT_ID = 0x5166 + (uint)SYSTEMID.Value;
-                        CanbusClass.BOOT_WAKE_ID = 0x5165 + (uint)SYSTEMID.Value;
+                        CanbusClass.BOOT_ID = 0x5166 + Convert.ToUInt32(SYSTEMIDv2.Text);
+                        CanbusClass.BOOT_WAKE_ID = 0x5165 + Convert.ToUInt32(SYSTEMIDv2.Text);
                         ConnectButton.Text = "Trying to Connect Device";
                         Thread.Sleep(100);
                         CanbusClass.CanTransmit(CanbusClass.channel, CanbusClass.BOOT_WAKE_ID, CanbusClass.BOOT_MSGTYP, CanbusClass.BOOT_DLC, CanbusClass.START_BL_TX);
@@ -276,16 +279,20 @@ namespace NXPBugger
                             UART_TEST_GB.Enabled = true;
                             CAN_TEST_GB.Enabled = true;
                             MessageBox.Show("Bootmode Activated!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            GeneralProgramClass.ListenInfinite = false;
+                            InfCanTask = new Thread(InfiniteListenLoop);
+                            InfCanTask.Start();
                         }
                         else
                         {
                             if (CanbusClass.CanDisconnect(CanbusClass.channel))
                             {
+                                GeneralProgramClass.ListenInfinite = false;
                                 CanbusClass.IsCanOpen = false;
                                 ConnectButton.Text = "Connect to Device";
                                 COMM_MODE_GB.Enabled = true;
                                 BAUD_GB.Enabled = true;
-                                UART_COM_GB.Enabled = true          ;
+                                UART_COM_GB.Enabled = true;
                                 SW_UPD_GB.Enabled = false;
                                 TEST_GB.Enabled = false;
                                 UART_TEST_GB.Enabled = false;
@@ -317,6 +324,7 @@ namespace NXPBugger
                 {
                     if (CanbusClass.CanDisconnect(CanbusClass.channel))
                     {
+                        GeneralProgramClass.ListenInfinite = false;
                         CanbusClass.IsCanOpen = false;
                         ConnectButton.Text = "Connect to Device";
                         COMM_MODE_GB.Enabled = true;
@@ -330,6 +338,17 @@ namespace NXPBugger
                 }
             }
         }
+
+        void InfiniteListenLoop()
+        {
+            while (GeneralProgramClass.ListenInfinite)
+            {
+                byte[] temp = new byte[8];
+                CanbusClass.CanReceive(CanbusClass.channel, CanbusClass.BOOT_ID, CanbusClass.BOOT_MSGTYP, CanbusClass.BOOT_DLC, temp, 0, GeneralProgramClass.ListenInfinite);
+            }
+        }
+
+
         Thread TH_CONNECT;
         bool connect_click_state = false;
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -514,6 +533,20 @@ namespace NXPBugger
                     MessageBox.Show("Username or Password is false", "Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void readconfig_Click(object sender, EventArgs e)
+        {
+            if (GeneralProgramClass.FormActive_CFG_Reader == false)
+            {
+                Config_Reader cr = new Config_Reader();
+                cr.Show();
+                GeneralProgramClass.FormActive_CFG_Reader = true;
+            }
+        }
+        private void SYSTEMIDv2_Click(object sender, EventArgs e)
+        {
+            SYSTEMIDv2.Text = Convert.ToUInt32(SYSTEMIDv2.Text) > 255 ? 255.ToString() : SYSTEMIDv2.Text;
         }
     }
 }

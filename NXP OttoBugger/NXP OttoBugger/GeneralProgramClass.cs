@@ -35,5 +35,6 @@ namespace NXPBugger
         public static string DefaultFileLocation;
         public static volatile bool FormActive_CFG_Creator = false;
         public static bool FormActive_CFG_Reader = false;
+        public static bool ListenInfinite = false;
     }
 }

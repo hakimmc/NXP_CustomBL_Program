@@ -195,7 +195,6 @@ namespace NXPBugger
                         MessageBox.Show("Timeout error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    MessageBox.Show(Encoding.UTF8.GetString(temp_cfg_array));
                     for(int j=0; j<8; j++)
                     {
                         cfg_array[(i*8)+j] = temp_cfg_array[j];

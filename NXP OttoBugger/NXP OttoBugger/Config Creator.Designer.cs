@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Config_Creator));
             CANGB = new GroupBox();
             CAN4_BAUD_CB = new ComboBox();
             label3 = new Label();
@@ -799,10 +800,11 @@
             Controls.Add(groupBox1);
             Controls.Add(CANGB);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "Config_Creator";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "NXPBugger";
+            Text = "NXPCreator";
             FormClosing += Config_Creator_FormClosing;
             Load += Config_Creator_Load;
             CANGB.ResumeLayout(false);
