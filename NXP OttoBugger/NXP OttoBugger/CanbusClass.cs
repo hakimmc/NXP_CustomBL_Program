@@ -1,4 +1,5 @@
-﻿using Peak.Can.Basic;
+﻿using Microsoft.WindowsAPICodePack.Taskbar;
+using Peak.Can.Basic;
 using Peak.Can.Basic.BackwardCompatibility;
 using System.Collections;
 using System.Diagnostics;
@@ -129,6 +130,7 @@ namespace NXPBugger
         {
             try
             {
+                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
                 pb.Enabled = true;
                 SW_UPD_BUTTON.Text = "Software Update Started!";
                 SW_UPD_BUTTON.Enabled = false;
@@ -184,8 +186,9 @@ namespace NXPBugger
                     {
                         return false;
                     }
-
                     pb.Value += 4;
+                    TaskbarManager.Instance.SetProgressValue(pb.Value, pb.Maximum);
+
                     //SW_UPD_BUTTON.Text = pb.Value/4 + " / " + pb.Maximum/4 + "flashed!";
                 }
                 SW_UPD_BUTTON.Text = pb.Maximum / 4 + "flashed!";
@@ -202,6 +205,7 @@ namespace NXPBugger
             }
             catch
             {
+                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Error);
                 MessageBox.Show("Software Update Error!", "Software Update Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -212,6 +216,7 @@ namespace NXPBugger
                 SW_UPD_BUTTON.Text = "Software Update Start";
                 SW_UPD_BUTTON.Enabled = true;
                 Kill_Thread_Status = false;
+                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
             }
         }
         public static CanMessageState WaitForMessage(PcanChannel PcanChannel, byte[] expectedMsg, uint Timeout)

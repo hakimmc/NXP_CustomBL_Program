@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Security.Permissions;
 using static NXPBugger.GeneralProgramClass;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace NXPBugger
 {

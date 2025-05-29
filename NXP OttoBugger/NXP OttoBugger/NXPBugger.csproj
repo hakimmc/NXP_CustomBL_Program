@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Peak.PCANBasic.NET" Version="4.10.0.964" />
     <PackageReference Include="System.IO.Ports" Version="9.0.3" />
+    <PackageReference Include="WindowsAPICodePack" Version="8.0.6" />
   </ItemGroup>
 
   <ItemGroup>
